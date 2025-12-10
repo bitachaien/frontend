@@ -40,7 +40,6 @@ authInstance.interceptors.request.use(
 
 authInstance.interceptors.response.use(
   (response) => {
-    // Trả về data trực tiếp như BC88BET
     return response.data;
   },
   (error: AxiosError) => {
@@ -81,11 +80,10 @@ contentInstance.interceptors.request.use(
 );
 
 contentInstance.interceptors.response.use(
-  (response) => {
-    // Trả về data trực tiếp như BC88BET
+
     const data = response.data;
     
-    // Xử lý response format của 789BET
+
     if (data?.status === false && data?.msg) {
       openNotification({
         type: "error",
@@ -96,13 +94,11 @@ contentInstance.interceptors.response.use(
     return data;
   },
   (error: AxiosError) => {
-    // Chỉ log error trong development mode và không phải 401/404
     const status = error.response?.status;
     if (process.env.NODE_ENV === "development" && status !== 401 && status !== 404) {
       console.log("Content API Error:", error.response);
     }
 
-    // Xử lý 401 - Unauthorized
     if (status === 401) {
       removeToken();
       if (typeof window !== "undefined") {
@@ -112,8 +108,6 @@ contentInstance.interceptors.response.use(
 
     if (error.response && error.response.data) {
       const errorData = error.response.data as any;
-      // Chỉ hiển thị notification cho các lỗi quan trọng (không phải 401, 404)
-      // 404 có thể là bình thường (endpoint không tồn tại, resource không tìm thấy)
       if (errorData?.msg && status !== 401 && status !== 404) {
         openNotification({
           type: "error",
