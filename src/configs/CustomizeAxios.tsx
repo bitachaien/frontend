@@ -5,17 +5,26 @@
  * 3. contentCFInstance - Cho API không cần auth
  */
 
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from "axios";
+import axios, {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosError,
+} from "axios";
 import { getToken, removeToken } from "./client-store";
 import { message as Message } from "antd";
 import { openNotification } from "@/utils/check";
 
-// Lấy baseURL từ environment hoặc sử dụng default
-// TODO: Cập nhật các URLs này theo backend thực tế của 789BET
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.78968.site";
-const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.78968.site";
+// Base URLs
+const AUTH_API_URL =
+  process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.78968.site";
+const CONTENT_API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://api.78968.site";
 
-// API instance for login and register
+/**
+ * =========================
+ * Auth API
+ * =========================
+ */
 const authInstance: AxiosInstance = axios.create({
   baseURL: AUTH_API_URL,
   timeout: 30000,
@@ -29,19 +38,15 @@ authInstance.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers = config.headers || {};
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
 authInstance.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
+  (response) => response.data,
   (error: AxiosError) => {
     console.log("Auth API Error:", error.response);
 
@@ -52,11 +57,16 @@ authInstance.interceptors.response.use(
       }
       return Promise.reject(errorData);
     }
+
     return Promise.reject(error.message || "Request failed");
   }
 );
 
-// API instance for content (cần auth)
+/**
+ * =========================
+ * Content API (cần auth)
+ * =========================
+ */
 const contentInstance: AxiosInstance = axios.create({
   baseURL: CONTENT_API_URL,
   timeout: 30000,
@@ -70,19 +80,16 @@ contentInstance.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers = config.headers || {};
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
 contentInstance.interceptors.response.use(
-
+  (response) => {
     const data = response.data;
-    
 
     if (data?.status === false && data?.msg) {
       openNotification({
@@ -90,12 +97,17 @@ contentInstance.interceptors.response.use(
         message: data.msg,
       });
     }
-    
+
     return data;
   },
   (error: AxiosError) => {
     const status = error.response?.status;
-    if (process.env.NODE_ENV === "development" && status !== 401 && status !== 404) {
+
+    if (
+      process.env.NODE_ENV === "development" &&
+      status !== 401 &&
+      status !== 404
+    ) {
       console.log("Content API Error:", error.response);
     }
 
@@ -108,19 +120,26 @@ contentInstance.interceptors.response.use(
 
     if (error.response && error.response.data) {
       const errorData = error.response.data as any;
+
       if (errorData?.msg && status !== 401 && status !== 404) {
         openNotification({
           type: "error",
           message: errorData.msg,
         });
       }
+
       return Promise.reject(errorData);
     }
+
     return Promise.reject(error.message || "Request failed");
   }
 );
 
-// API instance for content (không cần auth - Cloudflare/Public)
+/**
+ * =========================
+ * Content CF / Public API
+ * =========================
+ */
 const contentCFInstance: AxiosInstance = axios.create({
   baseURL: CONTENT_API_URL,
   timeout: 30000,
@@ -130,10 +149,7 @@ const contentCFInstance: AxiosInstance = axios.create({
 });
 
 contentCFInstance.interceptors.response.use(
-  (response) => {
-    // Trả về data trực tiếp như BC88BET
-    return response.data;
-  },
+  (response) => response.data,
   (error: AxiosError) => {
     console.log("Content CF API Error:", error.response);
 
@@ -144,9 +160,9 @@ contentCFInstance.interceptors.response.use(
       }
       return Promise.reject(errorData);
     }
+
     return Promise.reject(error.message || "Request failed");
   }
 );
 
 export { authInstance, contentInstance, contentCFInstance };
-
