@@ -13,8 +13,8 @@ import { openNotification } from "@/utils/check";
 
 // Lấy baseURL từ environment hoặc sử dụng default
 // TODO: Cập nhật các URLs này theo backend thực tế của 789BET
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.bc88bet.com";
-const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.bc88bet.com";
+const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.78968casino.space";
+const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.78968casino.space";
 
 // API instance for login and register
 const authInstance: AxiosInstance = axios.create({
