@@ -118,10 +118,57 @@ export default function ViaBank() {
   }, 1000);
 
   useEffect(() => {
+    // BC88BET style: Ưu tiên đọc thông tin từ fastpay response (từ createRequestManualBank)
+    // Nếu có thông tin từ fastpay, dùng thông tin đó
+    // Nếu không có, mới gọi getBankRequest
+    const fastpayDataStr = localStorage.getItem("fastpay_deposit_data");
+    const fastpayTimestamp = localStorage.getItem("fastpay_deposit_timestamp");
+    
+    // Kiểm tra xem data có còn hợp lệ không (trong vòng 15 phút)
+    if (fastpayDataStr && fastpayTimestamp) {
+      const timestamp = parseInt(fastpayTimestamp);
+      const now = Date.now();
+      const isValid = (now - timestamp) < 15 * 60 * 1000; // 15 phút
+      
+      if (isValid) {
+        try {
+          const fastpayData = JSON.parse(fastpayDataStr);
+          // Chỉ dùng nếu bankCode và amount khớp
+          if (fastpayData.bankCode === bankCode && fastpayData.rate) {
+            const expectedAmount = amount ? parseInt(amount) : 0;
+            // Kiểm tra amount có khớp không (cho phép sai số nhỏ)
+            setDataBank({
+              bankAccountName: fastpayData.bankAccountName || "",
+              bankCode: fastpayData.bankCode || bankCode || "",
+              bankName: fastpayData.bankName || "",
+              bankNumber: fastpayData.bankNumber || "",
+              content: fastpayData.content || "",
+              qrBase64: fastpayData.qrBase64 || "",
+              rate: fastpayData.rate || 0.001,
+            });
+            setLoading(false);
+            
+            // Xóa data sau khi đã dùng
+            localStorage.removeItem("fastpay_deposit_data");
+            localStorage.removeItem("fastpay_deposit_timestamp");
+            return;
+          }
+        } catch (error) {
+          console.error("Error parsing fastpay data:", error);
+        }
+      } else {
+        // Data hết hạn, xóa đi
+        localStorage.removeItem("fastpay_deposit_data");
+        localStorage.removeItem("fastpay_deposit_timestamp");
+      }
+    }
+    
+    // Nếu không có thông tin từ fastpay, gọi getBankRequest như cũ
     if (bankCode && amount) {
       debouncedGetBankRequest();
     }
   }, [bankCode, amount]);
+
 
   return (
     <div
@@ -235,6 +282,7 @@ export default function ViaBank() {
               <li>Lưu lại biên lai giao dịch để đối chiếu khi cần thiết</li>
             </ul>
           </div>
+
         </div>
       </div>
       {loading && (

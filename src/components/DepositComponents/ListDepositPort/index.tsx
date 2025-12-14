@@ -163,7 +163,8 @@ export default function ListDepositPort() {
             </div>
           </div>
 
-          <div className="relative">
+          {/* Ẩn ZaloPay */}
+          {/* <div className="relative">
             <div
               onClick={() => setType("ZALO")}
               className={`${width < 768 ? styles.itemTypeDeposit : ""} ${cssPc} ${
@@ -180,14 +181,9 @@ export default function ListDepositPort() {
                 <div className={`${textMobile}`}> ZaloPay</div>
               </div>
             </div>
-            {/* <div className="absolute top-0 left-0 w-full h-full">
-            <div className="bg-black opacity-60 text-center w-full h-full rounded-lg"></div>
-            <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] font-bold text-white ">
-              Bảo trì
-            </div>
           </div> */}
-          </div>
-          <div className="relative">
+          {/* Ẩn VTPay */}
+          {/* <div className="relative">
             <div
               onClick={() => setType("VT")}
               className={`${width < 768 ? styles.itemTypeDeposit : ""} ${cssPc} ${
@@ -207,13 +203,7 @@ export default function ListDepositPort() {
                 <div className={`${textMobile}`}>VTPay</div>
               </div>
             </div>
-            {/* <div className="absolute top-0 left-0 w-full h-full">
-            <div className="bg-black opacity-60 text-center w-full h-full rounded-lg"></div>
-            <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] font-bold text-white ">
-              Bảo trì
-            </div>
           </div> */}
-          </div>
           <div
             onClick={() => setType("USDT")}
             className={`${width < 768 ? styles.itemTypeDeposit : ""} ${cssPc} ${
@@ -242,8 +232,9 @@ export default function ListDepositPort() {
       {type === "MOMO" && <MomoPort info={momoPort} />}
       {type === "USDT" && <USDTPort />}
 
-      {type === "ZALO" && <LoadingPort />}
-      {type === "VT" && <LoadingPort />}
+      {/* Ẩn ZaloPay và VTPay */}
+      {/* {type === "ZALO" && <LoadingPort />} */}
+      {/* {type === "VT" && <LoadingPort />} */}
     </div>
   );
 }

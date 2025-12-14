@@ -16,8 +16,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getMessage, openNotification } from "@/utils/check";
 import { LoadingOutlined } from "@ant-design/icons";
 import { loginDto } from "@/dto/authDto";
-import gameService from "@/api/services/game.service";
 import ModalError from "../ModalError";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import { API_GATE } from "@/constant/gate";
 import authService from "@/api/services/auth.servicer";
 
@@ -39,6 +39,7 @@ export default function LoginToSupplier() {
   const lang = searchParams.get("lang");
 
   const { loginUser } = useUser();
+  const { playGame } = usePlayGame();
   const [captcha, setCaptcha] = useState<Pcaptcha | undefined>(undefined);
   const [hoverLogin, setHoverLogin] = useState(false);
   const [form] = Form.useForm();
@@ -72,49 +73,42 @@ export default function LoginToSupplier() {
   };
 
   const onFinish = async (values: any) => {
+    console.log("Form submitted with values:", values);
     setLoadingLogin(true);
     try {
       // BC88BET style: chỉ cần username, password, captcha cố định
+      console.log("Calling signin API...");
       const response = await authService.signin(
         values.username.trim(),
         values.password.trim()
       );
-
+      console.log("Signin response:", response);
+      
       // BC88BET response format: { status: true, access_token, user } hoặc { status: false, msg }
-      if (response?.status === true) {
-        const { access_token, user } = response;
+      // authInstance interceptor đã trả về response.data, nên response đã là data rồi
+      const responseData = response as any;
+      if (responseData?.status === true) {
+        const { access_token, user } = responseData;
         loginUser(user || response, access_token);
         
         if (ridrect) {
           router.push(ridrect);
         } else if (d && gameid && gpid && supplier && type) {
-          const res = await gameService.lauchgameType2({
-            device: d,
-            gameid: gameid,
+          // Sử dụng usePlayGame hook với auto wallet transfer sau khi đăng nhập thành công
+          await playGame({
+            gameId: gameid,
             gpid: gpid,
             supplier: supplier,
             type: type,
-            lang: "en",
+            lang: lang || "en",
           });
-          if (res.data) {
-            const encodedParams = encodeURIComponent(res?.data?.data);
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            if (window.opener) {
-              router.push(`/games/playing?url=${encodedParams}`);
-            } else {
-              window.open(
-                `/games/playing?url=${encodedParams}`,
-                "popupWindow",
-                `width=${width},height=${height},top=0,left=0,scrollbars=yes,resizable=yes`
-              );
-            }
-          }
+        } else {
+          // Nếu không có redirect và không có game params, redirect về trang chủ
+          router.push("/");
         }
       } else {
         setOpenModalError(true);
-        setTextModalError(response?.msg || "Đăng nhập thất bại");
+        setTextModalError(responseData?.msg || "Đăng nhập thất bại");
       }
     } catch (error: any) {
       setOpenModalError(true);

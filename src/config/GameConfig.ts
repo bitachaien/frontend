@@ -25,267 +25,462 @@ export interface GameConfigItem {
  * - code: Mã riêng cho wallet system (có thể giống supplier hoặc khác)
  */
 export const GameConfig: GameConfigItem[] = [
-  // PG Soft
-  {
-    code: "PG",
-    config: "pg",
-    type: 98,             // Product Code từ BC88BET (PG Điện Tử)
-    gameType: 1,          // SLOT
-    game: "PG",
-    name: "PG Soft",
-    mode: 1,
-    supplier: "pg",
-    gpid: 1007,
-  },
-  // Jili
-  {
-    code: "JL",
-    config: "jili",
-    type: 140,            // Product Code từ BC88BET (JL Nổ hũ, Bắn Cá)
-    gameType: 1,         // SLOT
-    game: "Jili",
-    name: "Jili Games",
-    mode: 1,
-    supplier: "jili",
-    gpid: 1091,
-  },
   // Dream Gaming
   {
     code: "DG",
-    config: "dg",
-    type: 27,             // Product Code từ BC88BET (DG Casino)
-    gameType: 2,         // LIVE_CASINO
-    game: "DG",
-    name: "Dream Gaming",
+    config: "API_1",
+    type: 27,
+    game: "XXXXXX",
+    name: "DG Casino",
     mode: 1,
+    gameType: 2,         // LIVE_CASINO
     supplier: "dg",
     gpid: 1052,
   },
-  // WM Casino
+  // Asia Gaming
   {
-    code: "WM",
-    config: "wm",
-    type: 118,            // Product Code từ BC88BET (WM CASINO)
-    gameType: 2,         // LIVE_CASINO
-    game: "WM",
-    name: "WM Casino",
+    code: "AG",
+    config: "API_1",
+    type: 4,
+    game: "XXXXXX",
+    name: "AG Casino",
     mode: 1,
-    supplier: "wm",
-    gpid: 1020,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "ag",
+    gpid: 1001,
+  },
+  // Evolution Gaming
+  {
+    code: "EG",
+    config: "API_1",
+    type: 191,
+    game: "XXXXXX",
+    name: "EVO Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "evo",
+    gpid: 1002,
+  },
+  // Evolution Gaming (EG5 variant - để tương thích với menuItems)
+  {
+    code: "EG5",
+    config: "API_1",
+    type: 191,
+    game: "XXXXXX",
+    name: "EVO Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "evo",
+    gpid: 1002,
+  },
+  // Sexy Gaming
+  {
+    code: "SEX",
+    config: "API_1",
+    type: 112,
+    game: "XXXXXX",
+    name: "SEX Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "se",
+    gpid: 1022,
   },
   // SABA Sports
   {
-    code: "SB",           // BC88BET dùng "SB" làm code
-    config: "saba",
-    type: 174,           // Product Code từ BC88BET (SaBa Thể Thao)
-    gameType: 3,         // SPORT_BOOK
-    game: "SABA",
-    name: "SABA Sports",
+    code: "SB",
+    config: "API_1",
+    type: 174,
+    game: "XXXXXX",
+    name: "SaBa Thể Thao",
     mode: 1,
+    gameType: 3,         // SPORT_BOOK
     supplier: "saba",
     gpid: 1046,
   },
   // CMD Sports
   {
     code: "CMD",
-    config: "cmd",
-    type: 104,           // Product Code từ BC88BET (CMD Thể Thao)
-    gameType: 3,        // SPORT_BOOK
-    game: "CMD",
-    name: "CMD Sports",
+    config: "API_1",
+    type: 104,
+    game: "XXXXXX",
+    name: "CMD Thể Thao",
     mode: 1,
+    gameType: 3,        // SPORT_BOOK
     supplier: "cmd",
     gpid: 1078,
   },
-  // Evolution Gaming
+  // GPI Casino
   {
-    code: "SA",           // BC88BET dùng "SA" làm code cho EVO
-    config: "evo",
-    type: 86,            // Product Code từ BC88BET (EVO Casino)
+    code: "GPI",
+    config: "API_1",
+    type: 76,
+    game: "XXXXXX",
+    name: "GPI Casino",
+    mode: 1,
     gameType: 2,        // LIVE_CASINO
-    game: "EVO",
-    name: "Evolution Gaming",
-    mode: 1,
-    supplier: "evo",
-    gpid: 1002,
+    supplier: "gpi",
+    gpid: 0,
   },
-  // Pragmatic Play
+  // BB Nổ hũ, Bắn Cá
   {
-    code: "PP",
-    config: "pp",
-    type: 39,            // Product Code từ BC88BET (Pragmatic Play)
-    gameType: 1,        // SLOT
-    game: "PP",
-    name: "Pragmatic Play",
+    code: "BB",
+    config: "API_1",
+    type: 79,
+    game: "XXXXXX",
+    name: "BB Nổ hũ, Bắn Cá",
     mode: 1,
-    supplier: "pp",
-    gpid: 1006,
+    gameType: 1,        // SLOT
+    supplier: "bb",
+    gpid: 0,
   },
   // CQ9
   {
     code: "CQ9",
-    config: "cq9",
-    type: 16,             // Product Code từ BC88BET (CQ9 Nổ hũ, Bắn Cá)
-    gameType: 1,         // SLOT
-    game: "CQ9",
-    name: "CQ9",
+    config: "API_1",
+    type: 16,
+    game: "XXXXXX",
+    name: "CQ9 Nổ hũ, Bắn Cá",
     mode: 1,
+    gameType: 1,         // SLOT
     supplier: "cq9",
     gpid: 1009,
   },
-  // JDB
+  // WS168 Đá gà
   {
-    code: "JDB",
-    config: "jdb",
-    type: 55,            // Product Code từ BC88BET (JDB Điện Tử)
-    gameType: 1,        // SLOT
-    game: "JDB",
-    name: "JDB",
+    code: "WS168",
+    config: "API_1",
+    type: 202,
+    game: "XXXXXX",
+    name: "Đá gà WS168",
     mode: 1,
-    supplier: "jdb",
-    gpid: 1085,
+    gameType: 8,        // FISHING/COCKFIGHTING
+    supplier: "ws168",
+    gpid: 1033,
   },
-  // FTG
+  // Jili
   {
-    code: "FTG",
-    config: "ftg",
-    type: 147,          // Product Code từ BC88BET (FunTa Gaming)
-    gameType: 1,        // SLOT
-    game: "FTG",
-    name: "FTG",
+    code: "JL",
+    config: "API_1",
+    type: 140,
+    game: "XXXXXX",
+    name: "JL Nổ hũ, Bắn Cá",
     mode: 1,
-    supplier: "ftg",
-    gpid: "FTG",
+    gameType: 1,         // SLOT
+    supplier: "jili",
+    gpid: 1091,
   },
-  // TP (Tiger Play) - Không có trong bc88bet, giữ nguyên
+  // WM Casino
   {
-    code: "TP",
-    config: "tp",
-    type: 1,             // Tạm thời, cần cập nhật khi có Product Code
-    gameType: 1,        // SLOT
-    game: "TP",
-    name: "Tiger Play",
+    code: "WM",
+    config: "API_1",
+    type: 118,
+    game: "XXXXXX",
+    name: "WM CASINO",
     mode: 1,
-    supplier: "tp",
-    gpid: "TP",
-  },
-  // V8
-  {
-    code: "V8",
-    config: "v8",
-    type: 102,          // Product Code từ BC88BET (V8 Game 3D - LCC)
-    gameType: 1,        // SLOT
-    game: "V8",
-    name: "V8",
-    mode: 1,
-    supplier: "v8",
-    gpid: "V8",
+    gameType: 2,         // LIVE_CASINO
+    supplier: "wm",
+    gpid: 1020,
   },
   // R88
   {
     code: "R88",
-    config: "r88",
-    type: 162,          // Product Code từ BC88BET (R88 Điện Tử)
-    gameType: 1,        // SLOT
-    game: "R88",
-    name: "R88",
+    config: "API_1",
+    type: 162,
+    game: "XXXXXX",
+    name: "R88 Điện Tử",
     mode: 1,
+    gameType: 1,        // SLOT
     supplier: "r88",
     gpid: "R8",
+  },
+  // SA Gaming
+  {
+    code: "SA",
+    config: "API_1",
+    type: 93,
+    game: "XXXXXX",
+    name: "SA Gaming",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "sa",
+    gpid: 0,
+  },
+  // V8 Game 3D (LCC)
+  {
+    code: "LCC",
+    config: "API_1",
+    type: 102,
+    game: "XXXXXX",
+    name: "V8 Game 3D",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "v8",
+    gpid: "V8",
+  },
+  // V8 (alias cho LCC - để tương thích)
+  {
+    code: "V8",
+    config: "API_1",
+    type: 102,
+    game: "XXXXXX",
+    name: "V8 Game 3D",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "v8",
+    gpid: "V8",
+  },
+  // KA
+  {
+    code: "KA",
+    config: "API_1",
+    type: 157,
+    game: "XXXXXX",
+    name: "KA Nổ hũ, Bắn Cá",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "ka",
+    gpid: 1102,
+  },
+  // Spribe
+  {
+    code: "SPB",
+    config: "API_1",
+    type: 193,
+    game: "XXXXXX",
+    name: "Spribe",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "spribe",
+    gpid: 0,
+  },
+  // Pragmatic Play
+  {
+    code: "PP",
+    config: "API_1",
+    type: 39,
+    game: "XXXXXX",
+    name: "Pragmatic Play",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "pp",
+    gpid: 1006,
   },
   // Microgaming
   {
     code: "MG",
-    config: "mg",
-    type: 43,           // Product Code từ BC88BET (Micro Gaming)
-    gameType: 1,        // SLOT
-    game: "MG",
-    name: "Microgaming",
+    config: "API_1",
+    type: 43,
+    game: "XXXXXX",
+    name: "Micro Gaming",
     mode: 1,
+    gameType: 1,        // SLOT
     supplier: "mg",
     gpid: "MP",
   },
-  // RTG (RealTime Gaming)
+  // JDB
   {
-    code: "RTG",
-    config: "rtg",
-    type: 1,              // SLOT
-    game: "RTG",
-    name: "RealTime Gaming",
+    code: "JDB",
+    config: "API_1",
+    type: 55,
+    game: "XXXXXX",
+    name: "JDB Điện Tử",
     mode: 1,
-    supplier: "rtg",
-    gpid: 11,
+    gameType: 1,        // SLOT
+    supplier: "jdb",
+    gpid: 1085,
   },
-  // YGR (YesGetRich)
+  // RSG
   {
-    code: "YGR",
-    config: "ygr",
-    type: 1,              // SLOT
-    game: "YGR",
-    name: "YesGetRich",
+    code: "RSG",
+    config: "API_1",
+    type: 138,
+    game: "XXXXXX",
+    name: "RSG Điện Tử",
     mode: 1,
-    supplier: "ygr",
-    gpid: 1010,
+    gameType: 1,        // SLOT
+    supplier: "rsg",
+    gpid: 0,
   },
-  // KM (KingMidas)
+  // FC (FACAI GAMING)
   {
-    code: "KM",
-    config: "km",
-    type: 1,              // SLOT
-    game: "KM",
-    name: "KingMidas",
+    code: "FC",
+    config: "API_1",
+    type: 141,
+    game: "XXXXXX",
+    name: "FACAI GAMING",
     mode: 1,
-    supplier: "km",
-    gpid: "RE",
+    gameType: 1,        // SLOT
+    supplier: "fc",
+    gpid: 1079,
   },
-  // Live22
+  // FTG
   {
-    code: "LIVE22",
-    config: "live22",
-    type: 1,              // SLOT
-    game: "LIVE22",
-    name: "Live22",
+    code: "FTG",
+    config: "API_1",
+    type: 147,
+    game: "XXXXXX",
+    name: "FunTa Gaming",
     mode: 1,
-    supplier: "live22",
-    gpid: 1150,
+    gameType: 1,        // SLOT
+    supplier: "ftg",
+    gpid: "FTG",
   },
-  // Asia Gaming
+  // PS (PLAYSTAR)
   {
-    code: "AG",
-    config: "ag",
-    type: 4,             // Product Code từ BC88BET (AG Casino)
-    gameType: 2,        // LIVE_CASINO
-    game: "AG",
-    name: "Asia Gaming",
+    code: "PS",
+    config: "API_1",
+    type: 173,
+    game: "XXXXXX",
+    name: "PLAYSTAR",
     mode: 1,
-    supplier: "ag",
-    gpid: 1001,
+    gameType: 1,        // SLOT
+    supplier: "ps",
+    gpid: 1050,
   },
-  // Sexy Gaming
+  // BTG (Big Time Gaming)
   {
-    code: "SEX",          // BC88BET dùng "SEX" làm code
-    config: "se",
-    type: 112,          // Product Code từ BC88BET (SEX Casino)
-    gameType: 2,        // LIVE_CASINO
-    game: "SE",
-    name: "Sexy Gaming",
+    code: "BTG",
+    config: "API_1",
+    type: 184,
+    game: "XXXXXX",
+    name: "Big Time Gaming",
     mode: 1,
-    supplier: "se",
-    gpid: 1022,
+    gameType: 1,        // SLOT
+    supplier: "btg",
+    gpid: 0,
+  },
+  // PG Soft
+  {
+    code: "PG",
+    config: "API_1",
+    type: 98,
+    game: "XXXXXX",
+    name: "PG Điện Tử",
+    mode: 1,
+    gameType: 1,          // SLOT
+    supplier: "pg",
+    gpid: 1007,
   },
   // SBO
   {
     code: "SBO",
-    config: "sbo",
-    type: 54,           // Product Code từ BC88BET (SBOBET)
-    gameType: 3,       // SPORT_BOOK
-    game: "SBO",
-    name: "SBO",
+    config: "API_1",
+    type: 54,
+    game: "XXXXXX",
+    name: "SBOBET",
     mode: 1,
+    gameType: 3,       // SPORT_BOOK
     supplier: "sbo",
     gpid: 1012,
   },
-  // ... Thêm các providers khác khi cần
+  // TCG_VNLOTT
+  {
+    code: "TCG_VNLOTT",
+    config: "API_1",
+    type: 420,
+    game: "XXXXXX",
+    name: "VNLOTT Xổ Số",
+    mode: 1,
+    gameType: 4,       // LOTTERY
+    supplier: "tcg_vnlott",
+    gpid: 0,
+  },
+  // RTG (RealTime Gaming) - Không có trong bc88bet, giữ lại
+  {
+    code: "RTG",
+    config: "API_1",
+    type: 1,
+    game: "XXXXXX",
+    name: "RealTime Gaming",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "rtg",
+    gpid: 11,
+  },
+  // YGR (YesGetRich) - Không có trong bc88bet, giữ lại
+  {
+    code: "YGR",
+    config: "API_1",
+    type: 1,
+    game: "XXXXXX",
+    name: "YesGetRich",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "ygr",
+    gpid: 1010,
+  },
+  // KM (KingMidas) - Không có trong bc88bet, giữ lại
+  {
+    code: "KM",
+    config: "API_1",
+    type: 1,
+    game: "XXXXXX",
+    name: "KingMidas",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "km",
+    gpid: "RE",
+  },
+  // Live22 - Không có trong bc88bet, giữ lại
+  {
+    code: "LIVE22",
+    config: "API_1",
+    type: 1,
+    game: "XXXXXX",
+    name: "Live22",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "live22",
+    gpid: 1150,
+  },
+  // TP (Tiger Play) - Không có trong bc88bet, giữ lại
+  {
+    code: "TP",
+    config: "API_1",
+    type: 1,
+    game: "XXXXXX",
+    name: "Tiger Play",
+    mode: 1,
+    gameType: 1,        // SLOT
+    supplier: "tp",
+    gpid: "TP",
+  },
+  // BG (Big Game) - Casino
+  {
+    code: "BG",
+    config: "API_1",
+    type: 1,            // TODO: Cần xác định type chính xác từ backend
+    game: "XXXXXX",
+    name: "BG Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "bg",
+    gpid: 1004,         // BigGame từ ProviderID
+  },
+  // ON (OnCasino) - Casino
+  {
+    code: "ON",
+    config: "API_1",
+    type: 1,            // TODO: Cần xác định type chính xác từ backend
+    game: "XXXXXX",
+    name: "ON Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "on",
+    gpid: "OC",         // OnCasino từ ProviderID
+  },
+  // Astar - Casino
+  {
+    code: "ASTAR",
+    config: "API_1",
+    type: 1,            // TODO: Cần xác định type chính xác từ backend
+    game: "XXXXXX",
+    name: "Astar Casino",
+    mode: 1,
+    gameType: 2,        // LIVE_CASINO
+    supplier: "astar",
+    gpid: 0,
+  },
 ];
 
 /**

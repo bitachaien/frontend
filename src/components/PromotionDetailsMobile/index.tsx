@@ -1,7 +1,137 @@
 "use client";
 import he from "he";
+import { useState } from "react";
+import { PromotionDetailResponse } from "@/api/types/promotion.interface";
+import { registerPromotion } from "@/api/services/promotion.service";
+import { useUser } from "@/context/useUserContext";
+import { useRouter } from "next/navigation";
+import { message } from "antd";
 
-export default function PromotionDetailsMobile() {
+interface PromotionDetailsMobileProps {
+  promotionDetail?: PromotionDetailResponse | null;
+  onRegisterSuccess?: () => void;
+}
+
+export default function PromotionDetailsMobile({ promotionDetail, onRegisterSuccess }: PromotionDetailsMobileProps) {
+  const { user } = useUser();
+  const router = useRouter();
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [hasRegistered, setHasRegistered] = useState(false); // Chỉ dùng để disable nút, không đổi text
+
+  const handleRegister = async () => {
+    console.log("handleRegister called", { user: !!user, promotionId: promotionDetail?.id, hasRegistered });
+    
+    if (!user) {
+      message.warning("Vui lòng đăng nhập để tham gia khuyến mãi");
+      router.push("/mobile/login");
+      return;
+    }
+
+    if (!promotionDetail?.id) {
+      console.error("No promotion ID found");
+      message.error("Không tìm thấy thông tin khuyến mãi");
+      return;
+    }
+
+    if (hasRegistered) {
+      message.info("Bạn đã đăng ký khuyến mãi này rồi");
+      return;
+    }
+
+    if (isRegistering) {
+      console.log("Already registering, ignoring click");
+      return;
+    }
+
+    try {
+      setIsRegistering(true);
+      console.log("Registering promotion with ID:", promotionDetail.id);
+      
+      const res = await registerPromotion(promotionDetail.id);
+      console.log("Register promotion response:", res);
+      
+      // Kiểm tra response - nếu status: false thì là lỗi
+      if (res?.status === false) {
+        const errorMsg = res?.msg || res?.message || res?.data?.message || "Đăng ký thất bại. Vui lòng thử lại";
+        console.error("Register promotion failed:", res);
+        message.error(errorMsg);
+        return;
+      }
+      
+      // Kiểm tra nhiều format response có thể có cho success
+      const isSuccess = 
+        res?.status === true || 
+        res?.status === "success" ||
+        res?.code === 200 || 
+        res?.success === true ||
+        res?.data?.status === true ||
+        (res?.message && res?.message.toLowerCase().includes("thành công")) ||
+        (res?.data && Object.keys(res.data).length > 0 && res?.data?.status !== false);
+      
+      if (isSuccess) {
+        setHasRegistered(true);
+        message.success(res?.message || res?.data?.message || res?.msg || "Đăng ký tham gia khuyến mãi thành công!");
+        if (onRegisterSuccess) {
+          onRegisterSuccess();
+        }
+      } else {
+        const errorMsg = res?.message || res?.data?.message || res?.msg || "Đăng ký thất bại. Vui lòng thử lại";
+        console.error("Register promotion failed:", res);
+        message.error(errorMsg);
+      }
+    } catch (error: any) {
+      console.error("Error registering promotion:", error);
+      console.error("Error details:", {
+        message: error?.message,
+        response: error?.response,
+        data: error?.response?.data,
+        status: error?.response?.status
+      });
+      
+      const errorMsg = 
+        error?.response?.data?.message || 
+        error?.response?.data?.msg ||
+        error?.message || 
+        "Đăng ký thất bại. Vui lòng thử lại";
+      message.error(errorMsg);
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
+  // Nếu có promotionDetail từ API, sử dụng content từ đó
+  // Nếu không, hiển thị nội dung mặc định (fallback)
+  const content = promotionDetail?.content || promotionDetail?.description || null;
+
+  if (content) {
+    // Hiển thị nội dung từ API
+    return (
+      <div className="max-w-md mx-auto font-['Times_New_Roman',_Times,_serif] text-[#1B3864]">
+        <div
+          className="flex justify-center mt-2 w-full"
+          dangerouslySetInnerHTML={{
+            __html: he.decode(content),
+          }}
+        />
+        {/* Nút đăng ký tham gia - Luôn hiển thị "Đăng ký tham gia" */}
+        <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+          <button
+            onClick={handleRegister}
+            disabled={isRegistering || hasRegistered}
+            className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all ${
+              hasRegistered
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:scale-95"
+            } ${isRegistering ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
+            {isRegistering ? "Đang xử lý..." : "Đăng ký tham gia"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback: Hiển thị nội dung mặc định nếu không có dữ liệu từ API
   const rawHTML1 = `<section _ngcontent-serverapp-c144="" class="bottom-sheet-content relative"><label _ngcontent-serverapp-c144="" type="button" class="fixed left-0 bottom-[5rem] ng-star-inserted" style=""><img _ngcontent-serverapp-c144="" alt="" width="26px" src="https://gwfd.qatgwawm.net/system-requirement/Web.MobileNew/UK251-01/b71b16cfc5/assets/images/promotion/back.png"></label><!----><!----><div _ngcontent-serverapp-c144="" class="pb-4"><!----><div _ngcontent-serverapp-c144="" class="ng-star-inserted" style=""><!----><section _ngcontent-serverapp-c144="" class="ng-star-inserted" style=""><div _ngcontent-serverapp-c144="" ckcontent="" class="content-text ck-content"><p style="text-align: center;"><img height="400" src="https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/20f94dbf730a4fdf92eb558ab6dada16.png" width="1170"></p>
 
 <p align="center" class="p" style="text-align:center; margin:5pt 0pt"><span style="font-size:12pt"><span style="font-family:&quot;Times New Roman&quot;"><b><span style="font-size:12.0000pt"><span style="font-family:'Times New Roman'"><span style="color:#ff8e00"><span style="font-weight:bold">CASINO - TÔI CHỈ CHỌN 789BET</span></span></span></span></b></span></span></p>

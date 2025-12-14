@@ -33,10 +33,15 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
   );
   const bankValue = Form.useWatch("bank", form);
 
-  const { data: dataBankIn } = useQuery<undefined | IItemBankIn[]>({
-    queryFn: () => paymentService.getListBankIn(),
-    queryKey: ["getListBankIn"],
-  });
+  // Danh sách ngân hàng cố định - chỉ hiển thị các ngân hàng mà FastPay hỗ trợ (giống bc88bet)
+  const dataBankIn = [
+    { code: "VPB", name: "NGÂN HÀNG VPBANK" },
+    { code: "ACB", name: "NGÂN HÀNG Á CHÂU ACB" },
+    { code: "BIDV", name: "NGÂN HÀNG ĐẦU TƯ VÀ PHÁT TRIỂN BIDV" },
+    { code: "MB", name: "NGÂN HÀNG QUÂN ĐỘI MB" },
+    { code: "VCB", name: "NGÂN HÀNG NGOẠI THƯƠNG VIETCOMBANK" },
+    { code: "MOMO", name: "MOMO PAY" },
+  ];
 
   const rate = info?.rate ?? 0;
   const cashoutRate = info?.cashoutRate ?? 0;
@@ -66,20 +71,182 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
     }
   };
 
-  const onFinish = (values: any) => {
-    const dataRidrect = ridrectBankUrl(values, dataBankIn, bankValue);
-    if (isSafari()) {
-      router.push(dataRidrect);
-    } else {
-      window.open(dataRidrect, "_blank");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onFinish = async (values: any) => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Validation: Kiểm tra số tiền
+      if (!inputValueToVnd || inputValueToVnd <= 0) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert("Vui lòng nhập số tiền cần nạp");
+        return;
+      }
+
+      // Validation: Kiểm tra số tiền tối thiểu (50,000 VNĐ = 50)
+      if (inputValueToVnd < 50000) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert(`Số tiền tối thiểu là ${fNumber(50)} (tương đương 50,000 VNĐ)`);
+        return;
+      }
+
+      // Validation: Kiểm tra số tiền tối đa
+      if (inputValueToVnd > maxMoney * 1000) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert(`Giới hạn 1 giao dịch không vượt quá ${fNumber(maxMoney)}`);
+        return;
+      }
+
+      // Lấy bankCode từ bankValue (đã chọn trong dropdown)
+      const selectedBank = dataBankIn.find((bank: any) => (bank.code || bank.bin) === bankValue);
+      const bankCode = selectedBank?.code || bankValue;
+      
+      // Validation: Kiểm tra ngân hàng đã chọn
+      if (!bankCode) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert("Vui lòng chọn ngân hàng");
+        return;
+      }
+
+      // Validation: Nếu option yêu cầu chọn ngân hàng nhưng chưa chọn
+      if (selectOption && selectOption.bank && !bankValue) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert("Vui lòng chọn ngân hàng");
+        return;
+      }
+
+      // Lấy số tiền thực tế cần chuyển (đã tính phí)
+      // realVND đã là số tiền VNĐ (ví dụ: 50000 = 50,000 VNĐ)
+      // API FastPay nhận số tiền theo đơn vị VNĐ
+      const actualAmount = Math.round(realVND);
+      
+      if (actualAmount <= 0 || isNaN(actualAmount)) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert("Số tiền không hợp lệ. Vui lòng kiểm tra lại.");
+        return;
+      }
+
+      // Validation: Đảm bảo số tiền tối thiểu 50,000 VNĐ
+      if (actualAmount < 50000) {
+        setIsError(true);
+        setIsSubmitting(false);
+        alert("Số tiền tối thiểu là 50,000 VNĐ");
+        return;
+      }
+
+      console.log("Creating deposit request:", { 
+        actualAmount, 
+        bankCode, 
+        inputValueToVnd, 
+        realVND,
+        price: values.price,
+        cashoutRate,
+        rate
+      });
+      
+      // Gọi API FastPay để tạo lệnh nạp
+      const response = await paymentService.createRequestAutoBank(actualAmount, bankCode);
+      
+      console.log("Deposit API Response:", response);
+      
+      // Xử lý response - có thể có format { status: true, data: {...} } hoặc trả về trực tiếp data
+      const responseData = response?.data || response;
+      const hasStatus = response?.status !== undefined;
+      const isSuccess = hasStatus ? response.status === true : (responseData && !responseData.error);
+      
+      if (isSuccess && responseData) {
+        // Luôn redirect đến trang transfer/bank của 789bet với dữ liệu từ FastPay
+        // Lưu tất cả dữ liệu từ FastPay vào sessionStorage
+        // Ưu tiên qr_data từ FastPay (URL QR code VietQR)
+        const bankData = {
+          bankName: responseData.bankName || selectedBank?.name || "",
+          bankNumber: responseData.bankAccount || responseData.bankNumber || "",
+          bankAccountName: responseData.bankAccountName || responseData.bankName || "",
+          content: responseData.content || responseData.transId || "",
+          qrBase64: responseData.qrBase64 || "",
+          // Ưu tiên qr_data (VietQR URL) từ FastPay, sau đó mới đến qrImageUrl
+          qrImageUrl: responseData.qr_data || responseData.qrImageUrl || "",
+          rate: responseData.rate || cashoutRate || 0.001,
+          // Lưu thêm các thông tin khác từ FastPay nếu cần
+          paymentUrl: responseData.payment_url || responseData.linkWebView || responseData.linkOpenApp || "",
+          bankCode: responseData.bankCode || responseData.bank || bankCode,
+          amount: responseData.amount || actualAmount,
+        };
+        
+        console.log("Saving FastPay bank data:", bankData);
+        
+        // Redirect đến trang transfer/bank của 789bet
+        const transferUrl = `/transfer/bank?c=${bankCode}&a=${actualAmount}`;
+        sessionStorage.setItem('bankTransferData', JSON.stringify(bankData));
+        
+        if (isSafari()) {
+          router.push(transferUrl);
+        } else {
+          window.open(transferUrl, "_blank");
+        }
+      } else {
+        setIsError(true);
+        setIsSubmitting(false);
+        const errorMsg = response?.msg || response?.message || responseData?.msg || responseData?.message || "Có lỗi xảy ra khi tạo lệnh nạp";
+        alert(errorMsg);
+        console.error("Deposit API error:", response);
+      }
+    } catch (error: any) {
+      console.error("Error creating deposit request:", error);
+      setIsError(true);
+      setIsSubmitting(false);
+      
+      // Xử lý các loại lỗi khác nhau
+      let errorMsg = "Có lỗi xảy ra khi tạo lệnh nạp";
+      if (error?.response?.data?.msg) {
+        errorMsg = error.response.data.msg;
+      } else if (error?.response?.data?.message) {
+        errorMsg = error.response.data.message;
+      } else if (error?.message) {
+        errorMsg = error.message;
+      }
+      
+      alert(errorMsg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // Tự động chọn option đầu tiên khi component mount
+  useEffect(() => {
+    if (!bankSelected && listOptionsAgentTransfer.length > 0) {
+      const firstOption = listOptionsAgentTransfer.find(item => item.bank === true);
+      if (firstOption) {
+        setBankSelected(firstOption.id);
+      } else if (listOptionsAgentTransfer.length > 0) {
+        setBankSelected(listOptionsAgentTransfer[0].id);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        if (dataBankIn) {
-          setBankSelected(1);
+        if (dataBankIn && dataBankIn.length > 0) {
+          // Set bankSelected thành id của option đầu tiên có sẵn nếu chưa có
+          if (!bankSelected) {
+            const firstOption = listOptionsAgentTransfer.find(item => item.bank === true);
+            if (firstOption) {
+              setBankSelected(firstOption.id);
+            } else if (listOptionsAgentTransfer.length > 0) {
+              setBankSelected(listOptionsAgentTransfer[0].id);
+            }
+          }
         }
       }
     };
@@ -90,7 +257,7 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [dataBankIn]);
+  }, [dataBankIn, bankSelected]);
 
   useEffect(() => {
     if (inputValueToVnd === 0) {
@@ -226,8 +393,8 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
                         Vui lòng chọn ngân hàng
                       </Select.Option>
                       {dataBankIn &&
-                        dataBankIn.map((item) => (
-                          <Select.Option key={item.bin} value={item.bin}>
+                        dataBankIn.map((item: any) => (
+                          <Select.Option key={item.code || item.bin} value={item.code || item.bin}>
                             {item.name}
                           </Select.Option>
                         ))}
@@ -289,9 +456,10 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
 
               <Button
                 htmlType="submit"
-                disabled={isError}
+                disabled={isError || isSubmitting}
+                loading={isSubmitting}
                 className={styles.btnSubmit}>
-                Thanh toán ngay bây giờ
+                {isSubmitting ? "Đang xử lý..." : "Thanh toán ngay bây giờ"}
               </Button>
             </div>
           </Form>
@@ -354,8 +522,8 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
                         }>
                         <div className="flex flex-col">
                           {dataBankIn &&
-                            dataBankIn.map((item) => (
-                              <Radio key={item.bin} value={item.bin}>
+                            dataBankIn.map((item: any) => (
+                              <Radio key={item.code || item.bin} value={item.code || item.bin}>
                                 <span className="text-base text-[#808080] font-roHe">
                                   {item.name}
                                 </span>
@@ -450,7 +618,8 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
 
                   <Button
                     htmlType="submit"
-                    disabled={isError}
+                    disabled={isError || isSubmitting}
+                    loading={isSubmitting}
                     className={
                       !inputValueToVnd
                         ? styles.btnSubmitMobile
@@ -458,7 +627,7 @@ function TransferPort({ info }: { info: undefined | IInfo }) {
                           ? styles.btnSubmitMobile
                           : styles.btnSubmitMobileSuccess
                     }>
-                    Xác Nhận Nạp Tiền
+                    {isSubmitting ? "Đang xử lý..." : "Xác Nhận Nạp Tiền"}
                   </Button>
                   <Button
                     onClick={() => setBankSelected(undefined)}

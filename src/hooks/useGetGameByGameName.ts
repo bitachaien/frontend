@@ -780,6 +780,34 @@ export const useGetIframeGameByGameName = (gameName: string, typeGame: string) =
   const deviceC = useLaunchGameDevice();
   const queryKey = ["gameName", gameName];
   const queryFn = async () => {
+    // Log cơ bản (không có user context trong hook này)
+    // Map platform: "d" -> "html5-desktop", "m" -> "mobile"
+    const platformMap: Record<string, string> = {
+      "d": "html5-desktop",
+      "m": "mobile",
+    };
+    const platform = deviceC ? (platformMap[deviceC] || "html5") : null;
+    
+    // Thời gian bắt đầu gọi API
+    const requestTime = new Date().toISOString();
+    const requestTimestamp = Date.now();
+    
+    const apiLogData = {
+      method: "lg",
+      username: null, // Not available in hook context
+      product_type: gT || null,
+      game_code: null,
+      game_mode: null,
+      language: "en",
+      platform: platform,
+      request_time: requestTime,
+    };
+    // Chỉ log trong development mode
+    if (process.env.NODE_ENV === "development") {
+      console.log("=== API REQUEST LOG (useGetGameByGameName - Backend Format) ===");
+      console.log(JSON.stringify(apiLogData, null, 2));
+    }
+    
     const data = await gameService.lauchgameType2({
       device: deviceC || "",
       gameid: gID || 0,
@@ -788,6 +816,24 @@ export const useGetIframeGameByGameName = (gameName: string, typeGame: string) =
       supplier: p || "",
       lang: "en",
     });
+    
+    // Thời gian nhận response và tính thời gian phản hồi
+    const responseTime = new Date().toISOString();
+    const responseTimestamp = Date.now();
+    const responseTimeMs = responseTimestamp - requestTimestamp;
+    
+    // Log response với thời gian phản hồi
+    const responseLogData = {
+      ...apiLogData,
+      response_time: responseTime,
+      response_time_ms: responseTimeMs,
+    };
+    // Chỉ log trong development mode
+    if (process.env.NODE_ENV === "development") {
+      console.log("=== API RESPONSE LOG (useGetGameByGameName - Backend Format) ===");
+      console.log(JSON.stringify(responseLogData, null, 2));
+    }
+    
     return data?.data;
   };
 

@@ -25,7 +25,7 @@ import { usePlayGame } from "@/hooks/usePlayGame";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameType from "@/config/GameType";
 import Partner from "@/config/Partner";
-import { normalizeGames } from "@/utils/gameApiHelper";
+import { normalizeGames, normalizeGamesTo789BET, mapGameNameToProductType, mapProviderIdToProductType } from "@/utils/gameApiHelper";
 import ButtonScroll from "../IconSvg/ButtonScroll";
 import ItemGameMobile from "../ItemGameMobile";
 import { useFavoriteContext } from "@/context/useFavoriteContext";
@@ -80,14 +80,77 @@ function SlotPageMobile() {
   const getData = async (item: GameMobileData) => {
     try {
       setLoadingGame(true);
-      // Sử dụng API mới giống BC88BET
-      const res = await getListGameFish();
-      const games = normalizeGames(res?.data || res);
       
-      setListGame(games);
-      games.length > 0
-        ? setShowItem(games.slice(0, 15))
-        : setShowItem([]);
+      // Thử dùng API mới (BC88BET style) trước
+      try {
+        const res = await getListGameFish();
+        const rawGames = normalizeGames(res?.data || res);
+        
+        if (!rawGames || rawGames.length === 0) {
+          throw new Error("No games returned from API");
+        }
+        
+        // Desktop logic: Filter theo gameType field (productType) nếu có provider
+        let games: any[] = [];
+        
+        // Nếu không có gpIds hoặc gpIds rỗng, hiển thị tất cả games
+        if (!item.gpIds || item.gpIds.length === 0) {
+          games = normalizeGamesTo789BET(rawGames);
+        } else {
+          // Lấy productType từ provider đầu tiên (hoặc từ tên item)
+          const productType = mapGameNameToProductType(item.name) || 
+            (item.gpIds.length > 0 ? mapProviderIdToProductType(item.gpIds[0]) : null);
+          
+          if (productType) {
+            // Desktop filter: item.gameType == ProductType hoặc product_code/productCode
+            const filtered = rawGames.filter((game: any) => 
+              String(game.gameType) === String(productType) ||
+              game.product_code === productType ||
+              game.productCode === productType ||
+              String(game.providerId) === String(item.gpIds[0]) ||
+              String(game.provider_id) === String(item.gpIds[0])
+            );
+            
+            // Nếu filter có kết quả, dùng filtered; nếu không, dùng tất cả
+            games = filtered.length > 0 
+              ? normalizeGamesTo789BET(filtered)
+              : normalizeGamesTo789BET(rawGames);
+          } else {
+            games = normalizeGamesTo789BET(rawGames);
+          }
+        }
+        
+        // Nếu có games, sử dụng kết quả
+        if (games.length > 0) {
+          setListGame(games);
+          setShowItem(games.slice(0, 15));
+          return;
+        }
+      } catch (newApiError) {
+        console.log("New API error, trying fallback:", newApiError);
+      }
+      
+      // Fallback về GameAvalibleV2 nếu API mới không hoạt động hoặc không có dữ liệu
+      if (item.gpIds && item.gpIds.length > 0) {
+        const res = await gameService.GameAvalibleV2({
+          gpIds: item.gpIds,
+          gameTypes: [`${GameType.FISHING}`],
+          partner: item.partner ? item.partner : Partner.FE,
+        });
+
+        if (res.data.status === true && res?.data?.data) {
+          setListGame(res?.data?.data);
+          res?.data?.data.length > 0
+            ? setShowItem(res?.data?.data.slice(0, 15))
+            : setShowItem([]);
+        } else {
+          setListGame([]);
+          setShowItem([]);
+        }
+      } else {
+        setListGame([]);
+        setShowItem([]);
+      }
     } catch (error) {
       console.log("error", error);
       setListGame([]);

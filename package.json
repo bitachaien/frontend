@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clear": "rm -rf .next",
+    "clear": "rd /s /q .next",
     "dev": "next dev -p 3010",
     "build": "next build",
     "start": "next start",

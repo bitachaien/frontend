@@ -41,16 +41,18 @@ export function UserProvider({ children }: any) {
   const [firstTime, setFirstTime] = useState(true);
   const [loadingGame, setLoadingGame] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [hasAutoWithdrawn, setHasAutoWithdrawn] = useState(false);
 
   const loginUser = async (userInfo: any, token: string) => {
     setUser(userInfo);
     setTokenToLocalStorage(token);
     setBalance(userInfo?.balance || 0);
     
+    // Reset flag để cho phép auto withdrawal chạy lại
+    setHasAutoWithdrawn(false);
+    
     // Auto withdrawal từ ví game về ví chính (async, không block UI)
-    autoWithdrawalFromGameWallets().catch((error) => {
-      console.error("Auto withdrawal error on login:", error);
-    });
+    // Sẽ được gọi tự động bởi useEffect khi user state thay đổi
   };
 
   useEffect(() => {
@@ -167,10 +169,10 @@ export function UserProvider({ children }: any) {
             setUser(userData);
             setBalance(userData?.balance || userData?.coin || 0);
             
-            // Auto withdrawal từ ví game về ví chính (async, không block UI)
-            autoWithdrawalFromGameWallets().catch((error) => {
-              console.error("Auto withdrawal error on checkToken:", error);
-            });
+            // Reset flag để cho phép auto withdrawal chạy lại
+            setHasAutoWithdrawn(false);
+            
+            // Auto withdrawal từ ví game về ví chính sẽ được gọi tự động bởi useEffect
           }
         })
         .catch((error) => {
@@ -193,6 +195,32 @@ export function UserProvider({ children }: any) {
       refreshBalance();
     }
   }, [token]);
+
+  // Tự động rút tiền từ tất cả ví game về ví chính khi load lại trang
+  // Chạy khi user đã đăng nhập và chưa rút tiền trong session này
+  useEffect(() => {
+    const performAutoWithdrawal = async () => {
+      // Chỉ chạy nếu có user, có token, và chưa rút tiền trong session này
+      if (user && token && !hasAutoWithdrawn && !isFetching) {
+        setHasAutoWithdrawn(true);
+        // Auto withdrawal từ ví game về ví chính (async, không block UI)
+        autoWithdrawalFromGameWallets().catch((error) => {
+          console.error("Auto withdrawal error on page load:", error);
+          // Reset flag nếu có lỗi để có thể thử lại
+          setHasAutoWithdrawn(false);
+        });
+      }
+    };
+
+    performAutoWithdrawal();
+  }, [user, token, hasAutoWithdrawn, isFetching]);
+
+  // Reset hasAutoWithdrawn khi user logout
+  useEffect(() => {
+    if (!user || !token) {
+      setHasAutoWithdrawn(false);
+    }
+  }, [user, token]);
 
   return (
     <UserContext.Provider

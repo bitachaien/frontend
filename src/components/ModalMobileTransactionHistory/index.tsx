@@ -29,7 +29,7 @@ export default function ModalMobileTransactionHistory({
 
   // state
   const router = useRouter();
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 768);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [mailBoxes, setMailBoxes] = useState<any[]>([]);
 

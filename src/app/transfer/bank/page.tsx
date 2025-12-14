@@ -19,7 +19,9 @@ interface BankValue {
   bankNumber: string;
   content: string;
   qrBase64: string;
+  qrImageUrl?: string;
   rate: number;
+  amount?: number; // Số tiền từ FastPay (đã là VNĐ)
 }
 
 const DEFAULT_BANK_VALUE: BankValue = {
@@ -30,6 +32,7 @@ const DEFAULT_BANK_VALUE: BankValue = {
   content: "",
   qrBase64: "",
   rate: 0.001,
+  amount: 0,
 };
 
 const CountdownTimer = ({ initialSeconds }: any) => {
@@ -75,6 +78,45 @@ export default function BankTransfer() {
 
   const [loading, setLoading] = useState(true);
 
+  // Ưu tiên lấy dữ liệu từ FastPay API (đã lưu trong sessionStorage)
+  useEffect(() => {
+    if (bankCode && amount) {
+      const savedData = sessionStorage.getItem('bankTransferData');
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData);
+          console.log("Loading FastPay data:", parsedData);
+          
+          // Sử dụng dữ liệu từ FastPay - ưu tiên QR code từ FastPay
+          setDataBank({
+            bankAccountName: parsedData.bankAccountName || parsedData.bankName || "",
+            bankCode: parsedData.bankCode || bankCode || "",
+            bankName: parsedData.bankName || "",
+            bankNumber: parsedData.bankNumber || parsedData.bankAccount || "",
+            content: parsedData.content || "",
+            qrBase64: parsedData.qrBase64 || "",
+            // Ưu tiên qrImageUrl từ FastPay (có thể là qr_data hoặc qrImageUrl)
+            qrImageUrl: parsedData.qrImageUrl || "",
+            rate: parsedData.rate || 0.001,
+            // Số tiền từ FastPay (đã là VNĐ)
+            amount: parsedData.amount || (amount ? parseInt(amount) : 0),
+          });
+          
+          console.log("QR Code URL from FastPay:", parsedData.qrImageUrl);
+          setLoading(false);
+          // Xóa dữ liệu sau khi đã sử dụng
+          sessionStorage.removeItem('bankTransferData');
+          return;
+        } catch (error) {
+          console.error("Error parsing saved bank data:", error);
+        }
+      }
+      
+      // Nếu không có dữ liệu từ FastPay, gọi API cũ
+      getBankRequestF(bankCode, amount);
+    }
+  }, [bankCode, amount]);
+
   const getBankRequestF = async (bankCode: string, amount: string) => {
     try {
       setLoading(true);
@@ -88,29 +130,30 @@ export default function BankTransfer() {
     }
   };
 
-  const [debouncedGetBankRequest] = useDebounce(() => {
-    if (bankCode && amount) {
-      getBankRequestF(bankCode, amount);
-    }
-  }, 1000);
-
-  useEffect(() => {
-    if (bankCode && amount) {
-      debouncedGetBankRequest();
-    }
-  }, [bankCode, amount]);
-
   return (
     <div className="w-full h-full flex justify-center md:items-center max-md:overflow-auto max-md:justify-start max-md:block max-md:pb-[100px] bg-white">
 
     <div className={`w-full max-w-[750px]  ${styles.layoutBank}`}>
       <div className={` h-full mt-0 md:mt-[40px] text-black py-5 px-10`}>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <div className={styles.codeInfo}>Số tiền</div>
             <div className={styles.codeInfo}>
-              {amount && dataBank.rate ? fNumberVND(parseInt(amount) / dataBank.rate) : 0} VNĐ
+              {/* amount từ query params đã là VNĐ (từ actualAmount), không cần chia rate */}
+              {/* Nếu có amount từ FastPay data, ưu tiên dùng nó */}
+              {dataBank.amount 
+                ? fNumberVND(dataBank.amount) 
+                : (amount ? fNumberVND(parseInt(amount)) : 0)} VNĐ
             </div>
+          </div>
+
+          {/* Logo 789bet ở giữa */}
+          <div className="flex items-center justify-center flex-1">
+            <img
+              src="https://i.imgur.com/nGWKfdH.png"
+              alt="789BET Logo"
+              className="h-12 md:h-16 w-auto"
+            />
           </div>
 
           <div className="flex flex-col">
@@ -120,12 +163,26 @@ export default function BankTransfer() {
         </div>
 
         <div className="flex flex-col items-center justify-center">
-          {/* <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/icons-bank/MB.png" className="h-[60px]" alt="" /> */}
-          <img
-            className="w-[280px] h-[280px] mb-[10px]"
-            src={`data:image/png;base64,${dataBank.qrBase64}`}
-            alt=""
-          />
+          {/* Ưu tiên hiển thị QR code từ FastPay */}
+          {(dataBank.qrImageUrl || dataBank.qrBase64) && (
+            <img
+              className="w-[280px] h-[280px] mb-[10px]"
+              src={dataBank.qrImageUrl || `data:image/png;base64,${dataBank.qrBase64}`}
+              alt="QR Code"
+              crossOrigin="anonymous"
+              onError={(e) => {
+                // Fallback nếu QR code URL lỗi, thử dùng base64
+                if (dataBank.qrBase64 && dataBank.qrImageUrl) {
+                  (e.target as HTMLImageElement).src = `data:image/png;base64,${dataBank.qrBase64}`;
+                } else {
+                  console.error("QR Code load error:", e);
+                }
+              }}
+              onLoad={() => {
+                console.log("QR Code loaded successfully from:", dataBank.qrImageUrl || "base64");
+              }}
+            />
+          )}
         </div>
 
         <div className="flex flex-col items-center justify-center">
@@ -200,7 +257,10 @@ export default function BankTransfer() {
                     color: "green",
                   }}
                 >
-                  {amount && dataBank.rate ? fNumberVND(parseInt(amount) / dataBank.rate) : 0}
+                  {/* Ưu tiên số tiền từ FastPay, nếu không có thì dùng amount từ query (đã là VNĐ) */}
+                  {dataBank.amount 
+                    ? fNumberVND(dataBank.amount) 
+                    : (amount ? fNumberVND(parseInt(amount)) : 0)}
                 </div>
                 <CopyOutlined
                   onClick={() => {

@@ -16,11 +16,17 @@ function ItemGameMobile({ item }: any) {
   const { playGame } = usePlayGame();
 
   const handleClick = async () => {
+    // BC88BET style: 
+    // - code: codeGame (mã game cụ thể, ví dụ: "PG0123", "JL0091")
+    // - id: product_code/gameId (mã nhà cung cấp, ví dụ: "PG", "JL")
+    // - gameId: có thể là product_code hoặc số
     await playGame({
-      gameId: item.gameId,
-      gpid: item.providerId,
-      supplier: item.partnerName,
-      type: item.gameTypeId,
+      code: item.codeGame, // Mã game cụ thể
+      id: item.gameId || item.product_code || item.productCode, // Mã nhà cung cấp (product_code)
+      gameId: item.gameId || item.product_code || item.productCode,
+      gpid: item.providerId || item.provider_id || item.gpid,
+      supplier: item.partnerName || item.partner_name || item.supplier,
+      type: item.gameTypeId || item.game_type_id || item.type,
       lang: "en",
     });
   };

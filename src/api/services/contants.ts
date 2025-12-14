@@ -38,25 +38,27 @@ export const ConfigTransactionHistoryEndPoint = {
 };
 
 export const BetRecordEndPoint = {
-  BET_RECORD: "/bet-histories",
+  BET_RECORD: "/api/game/history", // BC88BET style endpoint
 };
 
 export const ConfigPaymentEndPoint = {
   LIST_PAYMENT_TYPE: "/payment/listConfig",
-  LIST_BANK_IN: "/payment/listBankIn",
+  LIST_BANK_IN: "/payment/listBanking",
   LIST_BANK_OUT: "/payment/listBankOut",
   BANK_REQUEST: "/payment/bankRequest",
   MOMO_REQUEST: "/payment/momoRequest",
   CARD_REQUEST: "/payment/cardRequest",
   LIST_CARD_TYPE: "/payment/listCardType",
   LIST_ALL_BANK_VN: "/payment/getAllVNBanks",
-  ADD_BANK_USER_INFO: "/payment/addBankUserInfo",
-  GET_ALL_BANK_USER: "/payment/getAllBankUsers",
-  BANK_OUT_REQUEST: "/payment/bankOutRequest",
+  ADD_BANK_USER_INFO: "/api/payment/userAddBank", // BC88BET style endpoint
+  GET_ALL_BANK_USER: "/api/payment/getListUserBank", // BC88BET style endpoint
+  BANK_OUT_REQUEST: "/api/payment/createRequestWithdraw", // BC88BET style endpoint
   PAYMENT_HISTORY: "/api/payment/history", // BC88BET style
   SEND_CRYPTO_TRX: "/payment/sendCryptoTrx",
   GET_USDT_PRICE: "/payment/getUsdtPrice",
   GET_CRYTO_TO_INFO: "/payment/getCryptoInfo",
+  LIST_AUTO_BANK_DEPOSIT: "/api/payment/getListAutoBankDeposit", // FastPay bank list
+  CREATE_REQUEST_AUTO_BANK: "/api/payment/createRequestAutoBank", // FastPay create deposit request
 };
 
 export const CurrentVipInfo = {

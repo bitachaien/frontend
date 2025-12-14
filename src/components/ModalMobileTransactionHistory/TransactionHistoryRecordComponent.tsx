@@ -65,6 +65,138 @@ export default function TransactionHistoryRecordComponent({
     </Row>
   );
 
+  // Hàm xác định loại giao dịch (giống logic trong transaction/page.tsx)
+  const getTransactionType = (transaction: DataExport) => {
+    // Kiểm tra description trước (thường chính xác nhất)
+    const desc = (transaction.description || transaction.info || '').toUpperCase();
+    const isWithdrawFromDesc = desc.includes('WITHDRAW') || desc.includes('RÚT');
+    const isDepositFromDesc = desc.includes('DEPOSIT') || desc.includes('NẠP') || desc.includes('ADMIN') || desc.includes('TẠO LỆNH');
+    
+    // Kiểm tra type field từ API - transaction.type là keyof typeof TRANSACTION_TYPE_ENUM
+    let typeLabel = '';
+    let typeValue: string = '';
+    let isWithdrawByType = false;
+    let isDepositByType = false;
+    
+    if (transaction.type) {
+      // transaction.type có thể là string key của enum hoặc object
+      if (typeof transaction.type === 'string') {
+        typeValue = transaction.type;
+      } else if (typeof transaction.type === 'object' && transaction.type !== null) {
+        typeValue = (transaction.type as any)?.defaultValue || (transaction.type as any)?.type || '';
+      } else {
+        typeValue = String(transaction.type);
+      }
+      
+      // Kiểm tra trực tiếp các key enum rút tiền
+      const typeUpper = typeValue.toUpperCase();
+      
+      // Kiểm tra các enum key rút tiền
+      if (typeValue === 'ONLINE_OUT' || 
+          typeValue === 'ONLINE_OUT_REFUND' ||
+          typeUpper === 'ONLINE_OUT' || 
+          typeUpper === 'ONLINE_OUT_REFUND' ||
+          typeUpper.includes('ONLINE_OUT') || 
+          (typeUpper.includes('OUT') && !typeUpper.includes('IN')) || 
+          typeUpper.includes('RÚT') || 
+          typeUpper.includes('WITHDRAW')) {
+        isWithdrawByType = true;
+        // Thử render bằng renderTypePayment
+        try {
+          const typeKey = typeValue as keyof typeof TRANSACTION_TYPE_ENUM;
+          if (TRANSACTION_TYPE_ENUM[typeKey]) {
+            typeLabel = renderTypePayment(TRANSACTION_TYPE_ENUM[typeKey]);
+          } else {
+            typeLabel = 'Rút tiền trực tuyến';
+          }
+        } catch (e) {
+          typeLabel = 'Rút tiền trực tuyến';
+        }
+      } 
+      // Kiểm tra các enum key nạp tiền
+      else if (typeValue === 'ONLINE_IN' || 
+               typeValue === 'ONLINE_IN_PROMOTION' ||
+               typeUpper === 'ONLINE_IN' || 
+               typeUpper === 'ONLINE_IN_PROMOTION' ||
+               typeUpper.includes('ONLINE_IN') || 
+               (typeUpper.includes('IN') && !typeUpper.includes('OUT')) || 
+               typeUpper.includes('NẠP') || 
+               typeUpper.includes('DEPOSIT') || 
+               typeUpper.includes('THANH TOÁN')) {
+        isDepositByType = true;
+        // Thử render bằng renderTypePayment
+        try {
+          const typeKey = typeValue as keyof typeof TRANSACTION_TYPE_ENUM;
+          if (TRANSACTION_TYPE_ENUM[typeKey]) {
+            typeLabel = renderTypePayment(TRANSACTION_TYPE_ENUM[typeKey]);
+          } else {
+            typeLabel = 'Thanh toán trực tuyến';
+          }
+        } catch (e) {
+          typeLabel = 'Thanh toán trực tuyến';
+        }
+      } 
+      // Thử render bằng renderTypePayment cho các type khác
+      else {
+        try {
+          const typeKey = typeValue as keyof typeof TRANSACTION_TYPE_ENUM;
+          if (TRANSACTION_TYPE_ENUM[typeKey]) {
+            typeLabel = renderTypePayment(TRANSACTION_TYPE_ENUM[typeKey]);
+            // Kiểm tra xem typeLabel có chứa "Rút" không
+            if (typeLabel && typeLabel.includes('Rút')) {
+              isWithdrawByType = true;
+            } else if (typeLabel && (typeLabel.includes('Nạp') || typeLabel.includes('Thanh toán'))) {
+              isDepositByType = true;
+            }
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+    }
+    
+    // Ưu tiên: description > type > amount
+    let isWithdraw = false;
+    let isDeposit = false;
+    
+    if (isWithdrawFromDesc) {
+      isWithdraw = true;
+      typeLabel = typeLabel || 'Rút tiền';
+    } else if (isDepositFromDesc) {
+      isDeposit = true;
+      typeLabel = typeLabel || 'Nạp tiền';
+    } else if (isWithdrawByType || (typeLabel && typeLabel.includes('Rút'))) {
+      isWithdraw = true;
+      typeLabel = typeLabel || 'Rút tiền';
+    } else if (isDepositByType || (typeLabel && (typeLabel.includes('Nạp') || typeLabel.includes('Thanh toán')))) {
+      isDeposit = true;
+      typeLabel = typeLabel || 'Nạp tiền';
+    } else {
+      // Fallback cuối cùng: dựa vào amount
+      // Nếu amount âm, chắc chắn là rút
+      if (transaction.amount < 0) {
+        isWithdraw = true;
+        typeLabel = 'Rút tiền';
+      } else {
+        // Với amount dương, cần kiểm tra kỹ hơn
+        // Nếu description có "Withdraw" thì là rút (dù amount dương)
+        if (desc.includes('WITHDRAW')) {
+          isWithdraw = true;
+          typeLabel = 'Rút tiền';
+        } else {
+          isDeposit = true;
+          typeLabel = 'Nạp tiền';
+        }
+      }
+    }
+    
+    return { 
+      isWithdraw, 
+      isDeposit,
+      label: typeLabel || (isWithdraw ? 'Rút tiền' : 'Nạp tiền')
+    };
+  };
+
   return (
     <div>
       {transactionRecords && transactionRecords?.dataExport.length > 0 ? (
@@ -74,6 +206,9 @@ export default function TransactionHistoryRecordComponent({
 
             const createdAtText = `${createdAt.format(`YYYY/MM/DD`)}(${dayNamesType2[dayjs(transaction.createdAt).day()]}) ${createdAt.format(`HH:mm:ss`)}`;
             const createdAtDayAgo = getDayLeft(createdAt);
+            
+            // Xác định loại giao dịch
+            const transactionType = getTransactionType(transaction);
 
             return (
               <div key={transaction.id} className="border mb-8">
@@ -93,13 +228,13 @@ export default function TransactionHistoryRecordComponent({
                   value={
                     <div
                       className={
-                        transaction.amount > 0
-                          ? "text-green-600"
-                          : "text-red-600"
+                        transactionType.isWithdraw
+                          ? "text-red-600"
+                          : "text-green-600"
                       }>
-                      {transaction.amount}{" "}
+                      {transactionType.isWithdraw ? '-' : '+'}{Math.abs(transaction.amount || 0).toLocaleString('vi-VN')}{" "}
                       <span
-                        className="ps-3 text-sky-500"
+                        className="ps-3 text-sky-500 cursor-pointer"
                         onClick={() => handleSelected(transaction)}>
                         chi tiết
                       </span>
@@ -112,7 +247,7 @@ export default function TransactionHistoryRecordComponent({
                   value={
                     renderTypePayment(
                       TRANSACTION_TYPE_ENUM[transaction.type]
-                    ) || "Thanh toán trực tuyến"
+                    ) || transactionType.label || "Thanh toán trực tuyến"
                   }
                 />
               </div>
@@ -137,12 +272,17 @@ export default function TransactionHistoryRecordComponent({
             label="Số tiền giao dịch"
             spanLabel={8}
             value={
-              <div
-                className={
-                  dataSelected.amount > 0 ? "text-green-600" : "text-red-600"
-                }>
-                {dataSelected.amount}{" "}
-              </div>
+              (() => {
+                const selectedType = getTransactionType(dataSelected);
+                return (
+                  <div
+                    className={
+                      selectedType.isWithdraw ? "text-red-600" : "text-green-600"
+                    }>
+                    {selectedType.isWithdraw ? '-' : '+'}{Math.abs(dataSelected.amount || 0).toLocaleString('vi-VN')}
+                  </div>
+                );
+              })()
             }
           />{" "}
           <Record

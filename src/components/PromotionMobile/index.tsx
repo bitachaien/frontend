@@ -19,8 +19,8 @@ import Image from "next/image";
 import { dataItemPromotions } from "./dataItemPromotions";
 import PromotionDetailsMobile from "../PromotionDetailsMobile";
 import { useUser } from "@/context/useUserContext";
-import gameService from "@/api/services/game.service";
 import useLaunchGameDevice from "@/hooks/useLaunchGameDevice";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import isSafari from "@/utils/isSafari";
 import { popup } from "@/utils/popup";
 import { dataGameSlideComponent } from "@/constant/dataGame";
@@ -37,13 +37,15 @@ export default function PromotionMobile() {
   const [promotions, setPromotions] = useState<IpromotionResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedPromotionId, setSelectedPromotionId] = useState<string | null>(null);
+  const [promotionDetail, setPromotionDetail] = useState<any>(null);
   
   const [open, setOpen] = useState(false);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
-  const { user, setLoadingGame } = useUser();
+  const { user } = useUser();
   const deviceC = useLaunchGameDevice();
+  const { playGame } = usePlayGame();
   const [openSwiperSlide, setOpenSwiperSlide] = useState(true);
   const [isShowDetails, setIsShowDetails] = useState({
     bool: false,
@@ -86,28 +88,14 @@ export default function PromotionMobile() {
     };
   }, []);
   const handleClick = async (item: any) => {
-    if (user?.username) {
-      try {
-        setLoadingGame(true);
-        const res = await gameService.lauchgameType2({
-          device: deviceC,
-          gameid: item.gameId,
-          gpid: item.providerId,
-          supplier: item.partnerName,
-          type: item.gameTypeId,
-          lang: "en",
-        });
-
-        if (res.data) {
-          router.push(res?.data?.data);
-        }
-      } catch (error) {
-      } finally {
-        setLoadingGame(false);
-      }
-    } else {
-      router.push('/mobile/login');
-    }
+    // Sử dụng usePlayGame hook với auto wallet transfer
+    await playGame({
+      gameId: item.gameId,
+      gpid: item.providerId,
+      supplier: item.partnerName,
+      type: item.gameTypeId,
+      lang: "en",
+    });
   };
 
   return (
@@ -132,6 +120,7 @@ export default function PromotionMobile() {
                       bool: false,
                       index: -1,
                     });
+                    setPromotionDetail(null);
                   }}
                   className={`${isShowDetails.bool ? "visible" : "opacity-0"}`}
                 >
@@ -153,9 +142,30 @@ export default function PromotionMobile() {
                     className="relative pb-[60px] flex-1 "
                   >
                     {isShowDetails.bool === true && (
-                      <PromotionDetailsMobile />
-
-
+                      <PromotionDetailsMobile 
+                        promotionDetail={promotionDetail}
+                        onRegisterSuccess={async () => {
+                          // Refresh promotion detail sau khi đăng ký thành công
+                          if (selectedPromotionId) {
+                            try {
+                              const detail = await getPromotionById(selectedPromotionId);
+                              const detailData = detail?.data || detail;
+                              setPromotionDetail(detailData);
+                              
+                              // Debug log (chỉ trong development)
+                              if (process.env.NODE_ENV === 'development') {
+                                console.log('PromotionMobile - Refreshed after register:', {
+                                  id: selectedPromotionId,
+                                  isRegister: detailData?.isRegister,
+                                  isRegisterType: typeof detailData?.isRegister
+                                });
+                              }
+                            } catch (error) {
+                              console.error("Error refreshing promotion detail:", error);
+                            }
+                          }
+                        }}
+                      />
                     )}
                     {isShowDetails.bool === false && (
                       <div className="flex flex-col gap-2">
@@ -171,7 +181,20 @@ export default function PromotionMobile() {
                               onClick={async () => {
                                 try {
                                   const detail = await getPromotionById(promotion.id);
+                                  const detailData = detail?.data || detail;
                                   setSelectedPromotionId(promotion.id);
+                                  setPromotionDetail(detailData);
+                                  
+                                  // Debug log (chỉ trong development)
+                                  if (process.env.NODE_ENV === 'development') {
+                                    console.log('PromotionMobile - Fetched promotion detail:', {
+                                      id: promotion.id,
+                                      isRegister: detailData?.isRegister,
+                                      isRegisterType: typeof detailData?.isRegister,
+                                      fullDetail: detailData
+                                    });
+                                  }
+                                  
                                   setIsShowDetails({
                                     bool: true,
                                     index: promotions.findIndex(p => p.id === promotion.id),

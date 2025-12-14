@@ -52,7 +52,9 @@ export function ridrectBankUrl(values: any, dataBankIn: any, bankName: string) {
       return `/transfer/BIDVBank?c=${bankName}&a=${values.price}`;
 
     default:
-      return `/transfer/${getRandomPath(listBankQR)}?c=${dataBankIn && dataBankIn[randomIndex]?.bin}&a=${values.price}`;
+      // Hỗ trợ cả format cũ (bin) và format mới (code) từ FastPay
+      const bankCode = dataBankIn && (dataBankIn[randomIndex]?.code || dataBankIn[randomIndex]?.bin);
+      return `/transfer/${getRandomPath(listBankQR)}?c=${bankCode}&a=${values.price}`;
   }
 }
 

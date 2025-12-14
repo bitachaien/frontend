@@ -137,7 +137,7 @@ export const normalizeGameObject = (game: any): any => {
   const normalized = {
     ...game,
     // BC88BET -> 789BET mapping
-    codeGame: game.game_code || game.tcgGameCode || game.codeGame || game.code,
+    codeGame: game.game_code || game.tcgGameCode || game.codeGame || game.code || game.gameCode,
     gameId: game.product_code || game.productCode || game.gameId || game.id,
     gameIconUrl: game.game_icon || game.icon || game.gameIconUrl || game.image,
     gameName: game.game_name || game.gameName || game.name,
@@ -147,8 +147,11 @@ export const normalizeGameObject = (game: any): any => {
     providerName: game.providerName || game.provider_name,
     gameTypeId: game.gameTypeId || game.game_type_id || game.type,
     gameTypeName: game.gameTypeName || game.game_type_name,
-    // Giữ lại các field gốc
+    // Giữ lại các field gốc từ BC88BET để dùng cho playGame
     id: game.id,
+    product_code: game.product_code || game.productCode || game.gameId,
+    productCode: game.product_code || game.productCode || game.gameId,
+    game_code: game.game_code || game.codeGame || game.code,
     gameType: game.gameType, // BC88BET dùng để filter
   };
   

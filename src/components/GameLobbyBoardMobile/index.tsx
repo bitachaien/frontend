@@ -9,18 +9,20 @@ import { Input, Select, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { dataBacaratMobile, GameMobileData } from "@/constant/dataGameMobile";
-import gameService from "@/api/services/game.service";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffectOnce } from "react-use";
 import { useUser } from "@/context/useUserContext";
 import apiClient from "@/api/apiClient";
 import useLaunchGameDevice from "@/hooks/useLaunchGameDevice";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameType from "@/config/GameType";
 import Partner from "@/config/Partner";
 import ButtonScroll from "../IconSvg/ButtonScroll";
 import ItemGameMobile from "../ItemGameMobile";
 import { useFavoriteContext } from "@/context/useFavoriteContext";
+import gameService from "@/api/services/game.service";
+import { mapProviderIdToProductType, normalizeGames, normalizeGamesTo789BET, getListGameByMultipleProviders } from "@/utils/gameApiHelper";
 
 function GameLobbyBoardMobile() {
   const router = useRouter();
@@ -28,6 +30,7 @@ function GameLobbyBoardMobile() {
   const { user } = useUser();
   // const { scrollPosition } = useScroll();
   const { favoriteGames } = useFavoriteContext();
+  const { playGame } = usePlayGame();
 
   const [searchValue, setSearchValue] = useState("");
   const [listGame, setListGame] = useState<any[]>([]);
@@ -48,17 +51,36 @@ function GameLobbyBoardMobile() {
     try {
       setLoadingGame(true);
       if (item.gpIds.length) {
+        // Thử dùng API mới (BC88BET style) trước
+        try {
+          const games = await getListGameByMultipleProviders(item.gpIds, GameType.CB);
+          const normalizedGames = normalizeGamesTo789BET(games);
+          
+          // Nếu có games, sử dụng kết quả
+          if (normalizedGames.length > 0) {
+            setListGame(normalizedGames);
+            setShowItem(normalizedGames.slice(0, 15));
+            return;
+          }
+        } catch (newApiError) {
+          console.log("New API error, trying fallback:", newApiError);
+        }
+        
+        // Fallback về GameAvalibleV2 nếu API mới không hoạt động hoặc không có dữ liệu
         const res = await gameService.GameAvalibleV2({
           gpIds: item.gpIds,
           gameTypes: [`${GameType.CB}`],
           partner: item.partner ? item.partner : Partner.FE,
         });
 
-        if (res.data.status === true) {
+        if (res.data.status === true && res?.data?.data) {
           setListGame(res?.data?.data);
-          res?.data?.data
+          res?.data?.data.length > 0
             ? setShowItem(res?.data?.data.slice(0, 15))
             : setShowItem([]);
+        } else {
+          setListGame([]);
+          setShowItem([]);
         }
       } else {
         setListGame([]);
@@ -66,6 +88,8 @@ function GameLobbyBoardMobile() {
       }
     } catch (error) {
       console.log("error", error);
+      setListGame([]);
+      setShowItem([]);
     } finally {
       setLoadingGame(false);
     }
@@ -109,28 +133,14 @@ function GameLobbyBoardMobile() {
   }, []);
 
   const handleClick = async (dataGame: any) => {
-    if (user?.username) {
-      try {
-        setLoadingGame(true);
-        const res = await gameService.lauchgameType2({
-          device: deviceC,
-          gameid: dataGame.gameId,
-          gpid: dataGame.providerId,
-          supplier: dataGame.partnerName,
-          type: dataGame.gameTypeId,
-          lang: "en",
-        });
-
-        if (res.data) {
-          router.push(res?.data?.data);
-        }
-      } catch (error) {
-      } finally {
-        setLoadingGame(false);
-      }
-    } else {
-      router.push(`/mobile/login`);
-    }
+    // Sử dụng usePlayGame hook với auto wallet transfer
+    await playGame({
+      gameId: dataGame.gameId,
+      gpid: dataGame.providerId,
+      supplier: dataGame.partnerName,
+      type: dataGame.gameTypeId,
+      lang: "en",
+    });
   };
 
   return (

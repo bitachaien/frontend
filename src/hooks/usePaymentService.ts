@@ -46,15 +46,25 @@ export const useGetPaymentHistory = (data: PaymentHistoryReq) => {
     isLoading,
     isFetching,
     refetch,
+    error,
   } = useQuery({
-    queryKey: ["getPaymentHistory"],
+    queryKey: ["getPaymentHistory", data.page, data.limit, data.dateFrom, data.dateTo, data.type],
     queryFn: () => paymentService.getPaymentHistory(data),
     refetchOnMount: true,
+    retry: 1,
+    retryDelay: 1000,
   });
+  
+  // Log để debug
+  if (error) {
+    console.error("useGetPaymentHistory error:", error);
+  }
+  
   return {
     dataPaymentHistory,
     isLoading,
     isFetching,
     refetch,
+    error,
   };
 };

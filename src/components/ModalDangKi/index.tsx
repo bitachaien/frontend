@@ -102,7 +102,7 @@ export default function ModalDangKi({
 
   // Tạo email tự động từ username nếu không có email
   const generateEmailFromUsername = (username: string): string => {
-    return `${username.toLowerCase().replace(/\s+/g, "")}@78968.site`;
+    return `${username.toLowerCase().replace(/\s+/g, "")}@example.com`;
   };
 
   const onFinish = async (values: any) => {

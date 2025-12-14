@@ -46,7 +46,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "789BET Link Mới 78968.site | 789b1.com không chặn",
+    default: "789BET Link Mới 789b.com | 789b1.com không chặn",
     template: "%s | 789BET ",
   },
   description: "",

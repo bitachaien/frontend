@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
 import { Button, Divider, Form, Input, Modal, Radio, RadioChangeEvent } from "antd";
@@ -10,13 +10,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useGetInfoUserBank } from "@/hooks/usePaymentService";
 import { useWindowSize } from "react-use";
+import { useUser } from "@/context/useUserContext";
 
 type IBankUser = {
   id: number;
   uid: number;
-  bankProvider: string;
-  bankAccountNumber: string;
-  bankAccountName: string;
+  bankProvider?: string; // Có thể là bankProvide
+  bankProvide?: string; // BC88BET format
+  bankAccountNumber?: string; // Có thể là bankNumber
+  bankNumber?: string; // BC88BET format
+  bankAccountName?: string;
+  bankName?: string; // BC88BET format
   bankBranch: string;
 };
 
@@ -49,41 +53,198 @@ export default function WithdrawMoney({
   bankOfUser: IBankOfUser;
 }) {
   const router = useRouter();
+  const { user, balance: userBalance } = useUser();
   const [bankUsing, setBankUsing] = useState<IBankUser>();
   const [form] = Form.useForm();
   const amountValue = Form.useWatch("amount", form) || 0;
   const { dataInfoUserBank, isLoading, isFetching } = useGetInfoUserBank();
   const [openDetail, setOpenDetail] = useState<boolean>(false);
+  
+  // Lấy tên từ nhiều nguồn: bankOfUser > dataInfoUserBank > user context
+  const userName = bankOfUser?.name || dataInfoUserBank?.name || user?.name || "";
+  
+  // Lấy số dư từ nhiều nguồn: userBalance (từ context) > bankOfUser.balance > user.balance
+  // Ưu tiên userBalance từ context vì nó được cập nhật real-time
+  const displayBalance = userBalance || bankOfUser?.balance || user?.balance || user?.coin || 0;
 
   const onFinish = async (values: any) => {
     try {
-      const res = await paymentService.bankOutRequest({
-        ...values,
-        bankUserId: bankUsing?.id,
-      });
-      if (res.status) {
-        openNotification({ type: "success", message: res?.msg });
+      if (!bankUsing) {
+        openNotification({ type: "error", message: "Vui lòng chọn ngân hàng" });
+        return;
       }
-    } catch (error) { }
+      
+      // Tìm thông tin ngân hàng từ listBank
+      const bankCode = bankUsing.bankProvider || bankUsing.bankProvide;
+      const selectedBank = listBank.find((item) => 
+        item.bin === bankCode ||
+        item.code === bankCode ||
+        item.bin?.toString() === bankCode?.toString() ||
+        item.code?.toString() === bankCode?.toString()
+      );
+      
+      // Format theo BC88BET: bankProvide, bankName, bankNumber, amount, passwd
+      const bankProvide = bankCode || "";
+      const bankName = selectedBank?.code || selectedBank?.short_name || selectedBank?.shortName || bankUsing.bankName || "";
+      const bankNumber = bankUsing.bankAccountNumber || bankUsing.bankNumber || "";
+      const amount = values.amount * 1000; // Convert từ đơn vị (100) sang VND (100,000)
+      const passwd = values.withdrawPassword;
+      
+      console.log("WithdrawMoney - Submitting withdrawal:", {
+        bankProvide,
+        bankName,
+        bankNumber,
+        amount,
+        passwd: "***",
+      });
+      
+      const res = await paymentService.bankOutRequest({
+        amount,
+        withdrawPassword: passwd,
+        bankProvide,
+        bankName,
+        bankNumber,
+      });
+      
+      console.log("WithdrawMoney - API Response (full):", JSON.stringify(res, null, 2));
+      console.log("WithdrawMoney - API Response type:", typeof res);
+      console.log("WithdrawMoney - API Response status:", res?.status);
+      console.log("WithdrawMoney - API Response msg:", res?.msg);
+      
+      // Kiểm tra nhiều format response từ BC88BET
+      // BC88BET thường trả về {status: true, msg: "Success", data: [...]}
+      // Hoặc có thể là {status: true, message: "Success"}
+      // Hoặc có thể response trực tiếp là data nếu interceptor đã xử lý
+      const responseData = res?.data || res;
+      
+      // Kiểm tra status từ nhiều nguồn
+      const statusValue = responseData?.status ?? res?.status;
+      const hasError = responseData?.error || res?.error || responseData?.status === false || res?.status === false;
+      
+      const isSuccess = 
+        statusValue === true || 
+        statusValue === "true" || 
+        statusValue === 1 ||
+        (res?.code === 200 || res?.code === "200") ||
+        // Nếu không có error và không có status false, coi như success (trường hợp API trả về thành công nhưng không có status field)
+        (!hasError && res && typeof res === "object" && statusValue !== false);
+      
+      console.log("WithdrawMoney - statusValue:", statusValue);
+      console.log("WithdrawMoney - hasError:", hasError);
+      console.log("WithdrawMoney - isSuccess:", isSuccess);
+      
+      const successMsg = 
+        responseData?.msg || 
+        responseData?.message || 
+        res?.msg || 
+        res?.message || 
+        "Tạo lệnh rút tiền thành công. Hệ thống sẽ tự động chuyển tiền vào tài khoản của bạn";
+      
+      const errorMsg = 
+        responseData?.msg || 
+        responseData?.message || 
+        res?.msg || 
+        res?.message ||
+        "Rút tiền thất bại";
+      
+      console.log("WithdrawMoney - successMsg:", successMsg);
+      console.log("WithdrawMoney - errorMsg:", errorMsg);
+      
+      // Luôn hiển thị thông báo, không phụ thuộc vào isSuccess nếu có msg
+      if (isSuccess) {
+        console.log("WithdrawMoney - Showing success notification");
+        // Đảm bảo thông báo luôn được hiển thị
+        setTimeout(() => {
+          openNotification({ type: "success", message: successMsg });
+        }, 100);
+        form.resetFields();
+        // Refresh balance sau khi rút tiền thành công
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        console.log("WithdrawMoney - Showing error notification");
+        // Đảm bảo thông báo lỗi luôn được hiển thị
+        setTimeout(() => {
+          openNotification({ type: "error", message: errorMsg });
+        }, 100);
+      }
+    } catch (error: any) {
+      console.error("WithdrawMoney error:", error);
+      console.error("WithdrawMoney error response:", error?.response);
+      console.error("WithdrawMoney error data:", error?.response?.data);
+      
+      const errorMsg = error?.response?.data?.msg || 
+                      error?.response?.data?.message || 
+                      error?.response?.msg ||
+                      error?.message || 
+                      "Có lỗi xảy ra khi rút tiền";
+      
+      openNotification({ type: "error", message: errorMsg });
+    }
   };
 
   useEffect(() => {
-    if (bankOfUser.bankUsers && bankOfUser.bankUsers.length > 0) {
-      setBankUsing(bankOfUser.bankUsers[0]);
-    } else {
+    console.log("WithdrawMoney - bankOfUser:", bankOfUser);
+    console.log("WithdrawMoney - bankUsers:", bankOfUser?.bankUsers);
+    
+    if (bankOfUser?.bankUsers && bankOfUser.bankUsers.length > 0) {
+      const firstBank = bankOfUser.bankUsers[0];
+      console.log("WithdrawMoney - Setting bankUsing:", firstBank);
+      setBankUsing(firstBank);
+    } else if (bankOfUser && (!bankOfUser.bankUsers || bankOfUser.bankUsers.length === 0)) {
       router.push("/account/withdraw-application?addBank=true");
     }
-  }, [bankOfUser]);
-
-  const nameBank =
-    listBank &&
-    bankUsing &&
-    listBank.find((item) => item.bin === bankUsing.bankProvider);
+  }, [bankOfUser, router]);
 
   const onChange = (e: RadioChangeEvent) => {
     setBankUsing(e.target.value);
   };
-  const { width } = useWindowSize()
+  const { width } = useWindowSize();
+
+  // Tìm ngân hàng từ bankProvider/bankProvide với nhiều cách so sánh
+  const nameBank = React.useMemo(() => {
+    if (!listBank || !bankUsing) {
+      return null;
+    }
+    
+    // Lấy bankProvider hoặc bankProvide (BC88BET format)
+    const bankCode = bankUsing.bankProvider || bankUsing.bankProvide;
+    
+    if (!bankCode) {
+      console.warn("No bankProvider or bankProvide found in bankUsing:", bankUsing);
+      return null;
+    }
+    
+    // Thử nhiều cách tìm: bin, code, short_name
+    const found = listBank.find((item) => 
+      item.bin === bankCode ||
+      item.code === bankCode ||
+      item.code?.toUpperCase() === bankCode?.toUpperCase() ||
+      item.bin?.toString() === bankCode?.toString() ||
+      item.bin?.toString() === bankCode ||
+      item.code?.toString() === bankCode
+    );
+    
+    console.log("Finding bank - bankCode (provider/provide):", bankCode);
+    console.log("Finding bank - bankUsing:", bankUsing);
+    console.log("Finding bank - found:", found);
+    console.log("Finding bank - listBank sample:", listBank.slice(0, 3));
+    
+    return found || null;
+  }, [listBank, bankUsing]);
+
+  // Kiểm tra nếu không có bankOfUser hoặc bankUsers thì hiển thị thông báo
+  if (!bankOfUser || !bankOfUser.bankUsers || bankOfUser.bankUsers.length === 0) {
+    return (
+      <div className="w-full bg-[#2b2b2b] p-5 rounded-[10px] max-md:p-0 max-md:bg-transparent max-md:mb-2">
+        <div className="text-white text-center py-8">
+          <p className="text-lg mb-4">Bạn chưa có tài khoản ngân hàng</p>
+          <p className="text-sm text-gray-400">Vui lòng thêm tài khoản ngân hàng để rút tiền</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-[#2b2b2b] p-5 rounded-[10px] max-md:p-0 max-md:bg-transparent max-md:mb-2 max-md:h-full max-md:overflow-y-hidden">
@@ -103,8 +264,8 @@ export default function WithdrawMoney({
               Họ và tên
             </div>
             <div className="px-[15px] col-span-7 text-right  max-md:col-span-6 max-h-[34px]">
-              {dataInfoUserBank?.name ? (
-                <div>{dataInfoUserBank?.name}</div>
+              {userName ? (
+                <div>{userName}</div>
               ) : (
                 <Form.Item
                   name="bankAccountName"
@@ -114,7 +275,7 @@ export default function WithdrawMoney({
                       message: "Vui lý nhập họ và tên",
                     },
                   ]}>
-                  <Input className="h-[34px]" />
+                  <Input className="h-[34px]" placeholder="Nhập họ và tên" />
                 </Form.Item>
               )}
             </div>
@@ -125,7 +286,7 @@ export default function WithdrawMoney({
               Ngân hàng
             </div>
             <div className="px-[15px] col-span-7 text-right max-md:col-span-6">
-              {nameBank?.shortName}
+              {nameBank?.shortName || nameBank?.short_name || nameBank?.name || nameBank?.code || bankUsing?.bankProvider || "Chưa có thông tin"}
             </div>
           </div>
 
@@ -143,7 +304,7 @@ export default function WithdrawMoney({
               Số tài khoản
             </div>
             <div className="px-[15px] col-span-7 text-right max-md:col-span-6">
-              {bankUsing?.bankAccountNumber}
+              {bankUsing?.bankAccountNumber || bankUsing?.bankNumber || "Chưa có thông tin"}
             </div>
           </div>
 
@@ -160,17 +321,25 @@ export default function WithdrawMoney({
               onChange={onChange}
               value={bankUsing}
               className="flex flex-col gap-2 pb-[10px]">
-              {bankOfUser.bankUsers.map((item) => {
+              {bankOfUser?.bankUsers?.map((item) => {
+                const bankCode = item.bankProvider || item.bankProvide;
                 const nameBankRadio =
                   listBank &&
-                  bankUsing &&
-                  listBank.find((itemS) => itemS.bin === item.bankProvider);
+                  bankCode &&
+                  listBank.find((itemS) => 
+                    itemS.bin === bankCode ||
+                    itemS.code === bankCode ||
+                    itemS.code?.toUpperCase() === bankCode?.toUpperCase() ||
+                    itemS.bin?.toString() === bankCode?.toString() ||
+                    itemS.bin?.toString() === bankCode ||
+                    itemS.code?.toString() === bankCode
+                  );
                 return (
                   <Radio
                     key={item.id}
                     value={item}
                     className="text-[16px] text-white max-md:text-[#808080] max-md:text-[14px]">
-                    {nameBankRadio ? nameBankRadio.shortName : ""}
+                    {nameBankRadio ? (nameBankRadio.shortName || nameBankRadio.short_name || nameBankRadio.name || nameBankRadio.code) : (item.bankName || bankCode || "Ngân hàng")}
                   </Radio>
                 );
               })}
@@ -182,13 +351,13 @@ export default function WithdrawMoney({
                   Số dư tài khoản
                 </div>
                 <div className="max-md:text-[#ff417b]">
-                  {fNumberVND(bankOfUser.balance) === "0" ? (
+                  {displayBalance === 0 ? (
                     <div className="flex flex-col">
                       <p>0</p>
                       <p className="font-thin">Số dư tài khoản không đủ</p>
                     </div>
                   ) : (
-                    fNumberVND(bankOfUser.balance)
+                    fNumberVND(displayBalance)
                   )}
                 </div>
               </div>
@@ -225,7 +394,9 @@ export default function WithdrawMoney({
               Số dư tài khoản sau khi rút tiền
             </div>
 
-            <div className="py-[8px]">--</div>
+            <div className="py-[8px]">
+              {amountValue ? fNumberVND(displayBalance - (amountValue * 1000)) : fNumberVND(displayBalance)}
+            </div>
 
             <div>
               <div className="font-bold text-[16px] max-md:text-[14px]">
@@ -272,7 +443,7 @@ export default function WithdrawMoney({
           </div>
         </div>
       </Form>
-      <Modal width={width < 768 ? 400 : 700} open={openDetail} footer={null} onClose={() => setOpenDetail(false)} className={styles.modalDetail} closeIcon={<span className="text-[#337ab7] hover:underline" onClick={() => setOpenDetail(false)}>x</span>}>
+      <Modal width={width < 768 ? 400 : 700} open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} className={styles.modalDetail} closeIcon={<span className="text-[#337ab7] hover:underline" onClick={() => setOpenDetail(false)}>x</span>}>
         <div>
           <div className="px-4 pt-3">
             <h4 className="text-[#333333] text-base  md:text-xl"> Click vào đây để xem chi tiết yêu cầu</h4>

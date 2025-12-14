@@ -75,16 +75,65 @@ const lauchgameType2 = async ({
   gameid: number | string;
   gpid: number | string;
   type: number | string;
-}) =>
-  await contentInstance.get(`${ConfigGameEndPoint.LAUCHGAME}/${supplier}?&device=${device}&lang=${lang}&gameid=${gameid}&gpid=${gpid}&type=${type}`);
+}) => {
+  // Log theo format JSON như backend API
+  // Map platform: "d" -> "html5-desktop", "m" -> "mobile"
+  const platformMap: Record<string, string> = {
+    "d": "html5-desktop",
+    "m": "mobile",
+  };
+  const platform = device ? (platformMap[device] || "html5") : null;
+  
+  // Thời gian bắt đầu gọi API
+  const requestTime = new Date().toISOString();
+  const requestTimestamp = Date.now();
+  
+  const apiLogData = {
+    method: "lg",
+    username: null, // Will be logged at call site if available
+    product_type: type || null,
+    game_code: null, // Not available in Type2 API params
+    game_mode: null, // Not available in Type2 API params
+    language: lang || null,
+    platform: platform,
+    request_time: requestTime,
+  };
+  
+  // Chỉ log trong development mode
+  if (process.env.NODE_ENV === "development") {
+    console.log("=== API REQUEST LOG (lauchgameType2 - Backend Format) ===");
+    console.log(JSON.stringify(apiLogData, null, 2));
+  }
+  
+  const response = await contentInstance.get(`${ConfigGameEndPoint.LAUCHGAME}/${supplier}?&device=${device}&lang=${lang}&gameid=${gameid}&gpid=${gpid}&type=${type}`);
+  
+  // Thời gian nhận response và tính thời gian phản hồi
+  const responseTime = new Date().toISOString();
+  const responseTimestamp = Date.now();
+  const responseTimeMs = responseTimestamp - requestTimestamp;
+  
+  // Log response với thời gian phản hồi (chỉ trong development)
+  if (process.env.NODE_ENV === "development") {
+    const responseLogData = {
+      ...apiLogData,
+      response_time: responseTime,
+      response_time_ms: responseTimeMs,
+    };
+    console.log("=== API RESPONSE LOG (lauchgameType2 - Backend Format) ===");
+    console.log(JSON.stringify(responseLogData, null, 2));
+  }
+  
+  return response;
+};
 
 /**
  * BC88BET style: Launch game by code and id
  * @param code - Game code (codeGame, tcgGameCode, productCode)
  * @param id - Game ID (gameId, productCode, game_code)
+ * @note method=lg is required according to API documentation
  */
 const getPlayGameById = async (code: string, id: string) => {
-  return contentInstance.get(`/api/game/launchgame/${id}?code=${code}`);
+  return contentInstance.get(`/api/game/launchgame/${id}?code=${code}&method=lg`);
 };
 
 const GameAvalibleV2 = async (data: {
@@ -141,13 +190,11 @@ const ListGameFavorite = async () => {
     const res = await contentInstance.get(ConfigGameEndPoint.FAVORITE_LIST);
     return res.data;
   } catch (error: any) {
-    // Nếu endpoint không tồn tại (404), return empty array và không log error
+    // Nếu endpoint không tồn tại (404), return empty array
     if (error?.response?.status === 404) {
-      return { data: [] };
+      return [];
     }
-    // Nếu có lỗi khác, return empty array để không break app
-    console.error("ListGameFavorite error:", error);
-    return { data: [] };
+    throw error;
   }
 };
 

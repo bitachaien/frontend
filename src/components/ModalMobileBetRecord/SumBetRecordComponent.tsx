@@ -21,33 +21,50 @@ export default function SumBetRecordComponent({ betRecords = [] }: any) {
     </Row>
   );
 
-  const countStakeTotal = betRecords.reduce(
-    (acc: number, curr: any) => +(curr.stake ?? 0) + acc,
+  // Sử dụng đúng field từ API response
+  const countBetAmountTotal = betRecords.reduce(
+    (acc: number, curr: any) => {
+      const betAmount = parseFloat(curr.betAmount || curr.stake || curr.validBetAmount || 0);
+      return acc + betAmount;
+    },
     0,
   );
-  const countWinLossTotal = betRecords.reduce(
-    (acc: number, curr: any) => +(curr.winLoss ?? 0) + acc,
+  
+  const countValidBetTotal = betRecords.reduce(
+    (acc: number, curr: any) => {
+      const validBet = parseFloat(curr.validBetAmount || curr.betAmount || curr.stake || 0);
+      return acc + validBet;
+    },
     0,
   );
+  
+  const countWinAmountTotal = betRecords.reduce(
+    (acc: number, curr: any) => {
+      const winAmount = parseFloat(curr.winAmount || curr.winLoss || 0);
+      return acc + winAmount;
+    },
+    0,
+  );
+  
   const countTotalRecords = betRecords.length;
 
   return (
     <div className="border mb-8">
       <Record
         label="Số tiền cược"
-        value={countStakeTotal}
+        value={countBetAmountTotal.toLocaleString('vi-VN')}
       />
       <Record
         label="Đặt cược có hiệu lực"
-        value={countStakeTotal}
+        value={countValidBetTotal.toLocaleString('vi-VN')}
       />
       <Record
         label="Thanh toán"
-        value={countWinLossTotal}
+        value={countWinAmountTotal.toLocaleString('vi-VN')}
       />
       <Record
         label="Tổng số đơn"
-        value={`Tổng ${countTotalRecords} Hđơn`}
+        value={`Tổng ${countTotalRecords} đơn`}
       />
     </div>
   );

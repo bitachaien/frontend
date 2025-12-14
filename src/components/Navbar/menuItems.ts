@@ -368,13 +368,21 @@ const menuItems = [
           {
             label: "Ws168 Đá Gà",
             icon: "https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/nav/daga/aog.png",
-            link: `/games/CockFighting/${gameName.WS168}`
+            link: `/games/CockFighting/${gameName.WS168}`,
+            name: "Đá Gà WS168", // BC88BET
+            hot: true,
+            gameId: "WS168", // BC88BET
+            codeGame: "WS1682", // BC88BET
           },
 
           {
             label: "Ws168 Đá Gà",
             icon: "https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/new-logo-ncc/ws168.png",
-            link: `/games/CockFighting/${gameName.WS168}`
+            link: `/games/CockFighting/${gameName.WS168}`,
+            name: "Đá Gà WS168", // BC88BET
+            hot: true,
+            gameId: "WS168", // BC88BET
+            codeGame: "WS1682", // BC88BET
           },
         ],
       },
@@ -393,17 +401,29 @@ const menuItems = [
           {
             label: "TP Xổ Số",
             icon: "https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/new-logo-ncc/gw.png",
-            link: `/games/LotteryGame/${gameName.TP}`
+            link: `/games/LotteryGame/${gameName.TP}`,
+            name: "TCG Xố Số", // BC88BET
+            hot: true,
+            gameId: "TCG_VNLOTT", // BC88BET
+            codeGame: "TCG_VNLOTT_01", // BC88BET
           },
           {
             label: "VR Xổ Số",
             icon: "https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/new-logo-ncc/vr.png",
-            link: `/games/LotteryGame/${gameName.VR}`
+            link: `/games/LotteryGame/${gameName.VR}`,
+            name: "TCG Xố Số", // BC88BET
+            hot: true,
+            gameId: "TCG_VNLOTT", // BC88BET
+            codeGame: "TCG_VNLOTT_01", // BC88BET
           },
           {
             label: "GW Xổ Số",
             icon: "https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/new-logo-ncc/tp.png",
-            link: `/games/LotteryGame/${gameName.GW}`
+            link: `/games/LotteryGame/${gameName.GW}`,
+            name: "TCG Xố Số", // BC88BET
+            hot: true,
+            gameId: "TCG_VNLOTT", // BC88BET
+            codeGame: "TCG_VNLOTT_01", // BC88BET
           },
           // {
           //   label: "SW Xổ Số",

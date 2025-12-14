@@ -105,7 +105,7 @@ export default function MobileRegister() {
 
   // Tạo email tự động từ username nếu không có email
   const generateEmailFromUsername = (username: string): string => {
-    return `${username.toLowerCase().replace(/\s+/g, "")}@78968.site`;
+    return `${username.toLowerCase().replace(/\s+/g, "")}@example.com`;
   };
 
   const onFinish = async (values: any) => {
@@ -514,38 +514,25 @@ export default function MobileRegister() {
               </span>
             </div>
 
-            {/* <div className="flex flex-col gap-1 pb-0 pt-[6px] ">
-              <div className={styles.labelFormInput}>
-                <FontAwesomeIcon
-                  icon={faStar}
-                  color="#fc8f00"
-                  className="mr-[0.25rem]"
-                />
-                Họ tên thật
-              </div>
+            <div className="flex flex-col gap-1 pb-0 pt-[6px] ">
               <Form.Item
                 name="name"
                 className="formCustom"
                 rules={[
                   {
-                    required: true,
-                    message: "Vui lòng nhập tên thật của bạn!",
+                    required: false, // Tùy chọn, sẽ dùng username nếu không có
+                    message: "Vui lòng nhập họ tên!",
                   },
-                  // {
-                  //   pattern: /^[A-Z][A-Z]+$/,
-                  //   message: "Cần viết in hoa không dấu",
-                  // },
-                ]}
-                normalize={(value) => value.toUpperCase()}>
+                ]}>
                 <Input
                   className={styles.formInput}
-                  placeholder="Ví dụ: NGUYEN VAN A"
+                  placeholder="Họ tên (tùy chọn)"
                 />
               </Form.Item>
               <span className={styles.helptext}>
-                Cần Giống Với Họ Tên Thẻ Ngân Hàng, Viết Hoa Không Dấu.
+                Nếu không nhập, hệ thống sẽ tự động tạo từ tên đăng nhập
               </span>
-            </div> */}
+            </div>
 
             <div className="flex flex-col gap-1 pb-0 pt-[6px] ">
               {/* <div className={styles.labelFormInput}>

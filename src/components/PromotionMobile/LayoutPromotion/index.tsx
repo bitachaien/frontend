@@ -12,8 +12,8 @@ import IconDoubleArrowUp from "@/components/IconSvg/IconDoubleArrowUp";
 import { dataGameSlideComponent } from "@/constant/dataGame";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { useUser } from "@/context/useUserContext";
-import gameService from "@/api/services/game.service";
 import useLaunchGameDevice from "@/hooks/useLaunchGameDevice";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import isSafari from "@/utils/isSafari";
 import { popup } from "@/utils/popup";
 
@@ -40,33 +40,20 @@ export default function LayoutPromotionMobile({
     const [isVisible, setIsVisible] = useState(false);
     const [isExiting, setIsExiting] = useState(false);
     const [tagPromotion, setTagPromotion] = useState(dataTagPromotion[0].name);
-    const { user, setLoadingGame } = useUser();
+    const { user } = useUser();
     const deviceC = useLaunchGameDevice();
+    const { playGame } = usePlayGame();
 
     const router = useRouter();
     const handleLaunchGame = async (item: any) => {
-        if (user?.username) {
-            try {
-                setLoadingGame(true);
-                const res = await gameService.lauchgameType2({
-                    device: deviceC,
-                    gameid: item.gameId,
-                    gpid: item.providerId,
-                    supplier: item.partnerName,
-                    type: item.gameTypeId,
-                    lang: "en",
-                });
-
-                if (res.data) {
-                    router.push(res?.data?.data);
-                }
-            } catch (error) {
-            } finally {
-                setLoadingGame(false);
-            }
-        } else {
-            router.push('/mobile/login')
-        }
+        // Sử dụng usePlayGame hook với auto wallet transfer
+        await playGame({
+            gameId: item.gameId,
+            gpid: item.providerId,
+            supplier: item.partnerName,
+            type: item.gameTypeId,
+            lang: "en",
+        });
     };
 
     const handleClose = () => {

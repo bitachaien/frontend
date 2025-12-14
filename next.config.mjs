@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -6,6 +7,15 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  // Removed experimental features that may cause build issues on Vercel
+  // experimental: {
+  //   workerThreads: true,
+  //   cpus: 4,
+  //   parallelServerCompiles: true,
+  //   parallelServerBuildTraces: true,
+  //   webpackBuildWorker: true,
+  // },
 
   reactStrictMode: false,
   trailingSlash: false,
@@ -40,11 +50,13 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
 
   webpack(config, { isServer }) {
+    // Fix lỗi fs trên server
     if (isServer) {
       config.resolve.alias["fs"] = false;
     }
+
     return config;
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

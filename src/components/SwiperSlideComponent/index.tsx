@@ -8,9 +8,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { usePathname, useRouter } from "next/navigation";
 import IconDoubleArrowDown from "../IconSvg/IconDoubleArrowDown";
 import IconDoubleArrowUp from "../IconSvg/IconDoubleArrowUp";
-import gameService from "@/api/services/game.service";
 import { useUser } from "@/context/useUserContext";
 import useLaunchGameDevice from "@/hooks/useLaunchGameDevice";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import { dataGameSlideComponent } from "@/constant/dataGame";
@@ -21,34 +21,19 @@ export default function SwiperSlideComponent() {
   const deviceC = useLaunchGameDevice();
   const [openSwiperSlide, setOpenSwiperSlide] = useState(true);
 
-  const { user, setLoadingGame, loadingGame } = useUser();
+  const { user, loadingGame } = useUser();
+  const { playGame } = usePlayGame();
   const pathname = usePathname();
 
   const handleClick = async (item: any) => {
-    if (user?.username) {
-      try {
-        setLoadingGame(true);
-        const res = await gameService.lauchgameType2({
-          device: deviceC,
-          gameid: item.gameId,
-          gpid: item.providerId,
-          supplier: item.partnerName,
-          type: item.gameTypeId,
-          lang: "en",
-        });
-
-        if (res.data) {
-          router.push(res?.data?.data);
-        }
-      } catch (error) {
-      } finally {
-        setLoadingGame(false);
-      }
-    } else {
-      router.push(
-        `/lobby/navigation/LoginToSupplier?d=${deviceC}&gameid=${item.gameId}&gpid=${item.providerId}&supplier=${item.partnerName}&type=${item.gameTypeId}&lang=en`
-      );
-    }
+    // Sử dụng usePlayGame hook với auto wallet transfer
+    await playGame({
+      gameId: item.gameId,
+      gpid: item.providerId,
+      supplier: item.partnerName,
+      type: item.gameTypeId,
+      lang: "en",
+    });
   };
 
   if (

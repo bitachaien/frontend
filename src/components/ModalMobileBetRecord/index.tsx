@@ -26,6 +26,7 @@ export default function ModalMobileBetRecord({
   betRecords = [],
   filterOptions,
   setFilterOptions,
+  getBetRecords,
 }: {
   betRecords: any;
   filterOptions: {
@@ -34,12 +35,13 @@ export default function ModalMobileBetRecord({
     type: undefined;
   };
   setFilterOptions: any;
+  getBetRecords?: () => void;
 }) {
   // constant
 
   // state
   const router = useRouter();
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 768);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [value, setValue] = useState(1);
 
@@ -130,25 +132,35 @@ export default function ModalMobileBetRecord({
             </div>
           </Radio.Group>
           <div>
-            <div className="col-span-2  flex flex-col">
+            <div className="col-span-2  flex flex-col gap-2">
               <DatePicker
                 className="w-full"
                 format="YYYY/MM/DD HH:mm:ss"
+                showTime
                 onChange={(v) => {
-                  // TODO:
-                  setFilterOptions((prev: any) => ({ ...prev, betTimeEnd: v[0]?.toISOString() }));
+                  if (v) {
+                    setFilterOptions((prev: any) => ({ 
+                      ...prev, 
+                      betTimeStart: v.toISOString() 
+                    }));
+                  }
                 }}
-                value={[dayjs(filterOptions.betTimeStart)]}
+                value={dayjs(filterOptions.betTimeStart)}
               />
-              <div className="mx-auto p-0 my-0">-</div>
+              <div className="mx-auto p-0 my-0 text-center">-</div>
               <DatePicker
                 className="w-full"
                 format="YYYY/MM/DD HH:mm:ss"
-                onChange={(v) =>
-                  // TODO:
-                  setFilterOptions((prev: any) => ({ ...prev, betTimeEnd: v[0]?.toISOString() }))
-                }
-                value={[dayjs(filterOptions.betTimeEnd)]}
+                showTime
+                onChange={(v) => {
+                  if (v) {
+                    setFilterOptions((prev: any) => ({ 
+                      ...prev, 
+                      betTimeEnd: v.toISOString() 
+                    }));
+                  }
+                }}
+                value={dayjs(filterOptions.betTimeEnd)}
               />
             </div>
 
@@ -172,12 +184,20 @@ export default function ModalMobileBetRecord({
             </div>
           </div>
           <div className="mx-auto w-24 my-3">
-            <Button className="text-white bg-[#ffb627]">Tìm kiếm</Button>
+            <Button 
+              className="text-white bg-[#ffb627]"
+              onClick={() => {
+                // Gọi lại API với filter mới
+                if (getBetRecords) {
+                  getBetRecords();
+                }
+              }}
+            >
+              Tìm kiếm
+            </Button>
           </div>
           <SumBetRecordComponent betRecords={betRecords} />
           <BetRecordComponent betRecords={betRecords} />
-
-          <div className="w-full text-center">Không có dữ liệu</div>
         </div>
       </div>
     </Modal>

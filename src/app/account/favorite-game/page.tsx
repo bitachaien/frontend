@@ -31,6 +31,34 @@ export default function FavoriteGame() {
     if (user?.username) {
       try {
         setLoadingGame(true);
+        // Log với đầy đủ thông tin user
+        // Map platform: "d" -> "html5-desktop", "m" -> "mobile"
+        const platformMap: Record<string, string> = {
+          "d": "html5-desktop",
+          "m": "mobile",
+        };
+        const platform = deviceC ? (platformMap[deviceC] || "html5") : null;
+        
+        // Thời gian bắt đầu gọi API
+        const requestTime = new Date().toISOString();
+        const requestTimestamp = Date.now();
+        
+        const apiLogData = {
+          method: "lg",
+          username: user?.username || null,
+          product_type: item.game_type_id || null,
+          game_code: null,
+          game_mode: null,
+          language: "en",
+          platform: platform,
+          request_time: requestTime,
+        };
+        // Chỉ log trong development mode
+        if (process.env.NODE_ENV === "development") {
+          console.log("=== API REQUEST LOG (FavoriteGame - Backend Format) ===");
+          console.log(JSON.stringify(apiLogData, null, 2));
+        }
+        
         const res = await gameService.lauchgameType2({
           device: deviceC,
           gameid: item.game_id,
@@ -39,6 +67,23 @@ export default function FavoriteGame() {
           type: item.game_type_id,
           lang: "en",
         });
+        
+        // Thời gian nhận response và tính thời gian phản hồi
+        const responseTime = new Date().toISOString();
+        const responseTimestamp = Date.now();
+        const responseTimeMs = responseTimestamp - requestTimestamp;
+        
+        // Log response với thời gian phản hồi
+        const responseLogData = {
+          ...apiLogData,
+          response_time: responseTime,
+          response_time_ms: responseTimeMs,
+        };
+        // Chỉ log trong development mode
+        if (process.env.NODE_ENV === "development") {
+          console.log("=== API RESPONSE LOG (FavoriteGame - Backend Format) ===");
+          console.log(JSON.stringify(responseLogData, null, 2));
+        }
 
         if (res.data) {
           if (isMobile) {

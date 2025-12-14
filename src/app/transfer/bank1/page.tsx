@@ -205,7 +205,7 @@ export default function BankTransfer1() {
               <p className='text-[#999] font-normal '>
                 2. Nhập vào đúng nội dung chuyển khoản{' '}
                 <span className='text-[#55aaf0] font-semibold'>
-                  MUA HOA QUA {dataBank.content}
+                  được hiển thị{dataBank.content}
                 </span>{' '}
                 để nhận cập nhật giao dịch nhanh nhất
               </p>
@@ -376,7 +376,7 @@ export default function BankTransfer1() {
           <p className='text-[#999] font-normal '>
             2. Nhập vào đúng nội dung chuyển khoản{' '}
             <span className='text-[#55aaf0] font-semibold'>
-              MUA HOA QUA {dataBank.content}
+            được hiển thị {dataBank.content}
             </span>{' '}
             để nhận cập nhật giao dịch nhanh nhất
           </p>

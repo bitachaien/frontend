@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { dataGameNoHu, GameMobileData } from "@/constant/dataGameMobile";
-import gameService from "@/api/services/game.service";
+import gameService, { getListGame } from "@/api/services/game.service";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce, useEffectOnce } from "react-use";
 import { useUser } from "@/context/useUserContext";
@@ -28,6 +28,7 @@ import ButtonScroll from "../IconSvg/ButtonScroll";
 import ItemGameMobile from "../ItemGameMobile";
 import { useFavoriteContext } from "@/context/useFavoriteContext";
 import Link from "next/link";
+import { mapProviderIdToProductType, normalizeGames, normalizeGamesTo789BET, getListGameByMultipleProviders } from "@/utils/gameApiHelper";
 
 function SlotPageMobile() {
   const router = useRouter();
@@ -94,24 +95,25 @@ function SlotPageMobile() {
     try {
       setLoadingGame(true);
       if (item.gpIds.length) {
-        const res = await gameService.GameAvalibleV2({
-          gpIds: item.gpIds,
-          gameTypes: [`${GameType.SLOT}`, `${GameType.SL}`],
-          partner: item.partner ? item.partner : Partner.FE,
-        });
-
-        if (res.data.status === true) {
-          setListGame(res?.data?.data);
-          res?.data?.data
-            ? setShowItem(res?.data?.data.slice(0, 15))
-            : setShowItem([]);
-        }
+        // Desktop logic: Sử dụng getListGame với productType và gameType "RNG"
+        // Gọi API cho từng provider và merge kết quả
+        const games = await getListGameByMultipleProviders(item.gpIds, GameType.SLOT);
+        
+        // Normalize games giống desktop
+        const normalizedGames = normalizeGamesTo789BET(games);
+        
+        setListGame(normalizedGames);
+        normalizedGames.length > 0
+          ? setShowItem(normalizedGames.slice(0, 15))
+          : setShowItem([]);
       } else {
         setListGame([]);
         setShowItem([]);
       }
     } catch (error) {
       console.log("error", error);
+      setListGame([]);
+      setShowItem([]);
     } finally {
       setLoadingGame(false);
     }

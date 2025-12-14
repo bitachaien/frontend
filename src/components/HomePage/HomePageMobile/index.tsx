@@ -6,11 +6,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import "swiper/css";
 import styles from "./HomePageMobile.module.css";
-import gameService from "@/api/services/game.service";
 import GameType from "@/config/GameType";
 import listGameNavMobile from "@/constant/listGameNavMobile";
 import { useUser } from "@/context/useUserContext";
 import useLaunchGameDevice from "@/hooks/useLaunchGameDevice";
+import { usePlayGame } from "@/hooks/usePlayGame";
 import { fNumber } from "@/utils/format-number";
 import isSafari from "@/utils/isSafari";
 import { popup } from "@/utils/popup";
@@ -502,7 +502,8 @@ export default function HomePageMobile() {
   const deviceC = useLaunchGameDevice();
   const [loadingGame, setLoadingGame] = useState(false);
   const [kind, setKind] = useState<string | null>(null);
-  const { dataBalance, refetch, isFetching } = useGeBalance()
+  const { dataBalance, refetch, isFetching } = useGeBalance();
+  const { playGame } = usePlayGame();
   const changeQuery = (newQuery: string) => {
     router.replace(`/?kind=${newQuery}`);
     const index = listGameNavMobile
@@ -547,41 +548,20 @@ export default function HomePageMobile() {
   };
   const handleLaunchGame = async (item: any) => {
     if (item.game || item.link) {
-      setLoadingGame(true);
       if (item.game) {
-        if (username) {
-          try {
-            const res = await gameService.lauchgameType2({
-              device: deviceC,
-              gameid: item.game.gameid,
-              gpid: item.game.gpid,
-              supplier: item.game.supplier,
-              type: item.game.type,
-              lang: "en",
-            });
-            if (res?.data?.data) {
-              if (isSafari()) {
-                window.location.href = res?.data?.data;
-                setTimeout(() => {
-                  setLoadingGame(false);
-                }, 2000);
-              } else {
-                window.open(res?.data?.data);
-              }
-            }
-          } catch (error) {
-          } finally {
-            setLoadingGame(false);
-          }
-        } else {
-          setLoadingGame(false);
-          router.push("/mobile/login");
-        }
+        // Sử dụng usePlayGame hook với auto wallet transfer
+        await playGame({
+          gameId: item.game.gameid,
+          gpid: item.game.gpid,
+          supplier: item.game.supplier,
+          type: item.game.type,
+          lang: "en",
+        });
       } else {
+        // Xử lý link (không phải game)
         if (isSafari()) {
           window.location.href = item.link;
         } else {
-          setLoadingGame(false);
           popup(item.link);
         }
       }
