@@ -1,6 +1,6 @@
 /**
  * Code by DINH TRUNG 9999
- * CustomizeAxios - 3 Axios instances như BC88BET
+ * CustomizeAxios - 3 Axios instances như 789BET
  * 1. authInstance - Cho login/register
  * 2. contentInstance - Cho API chính (cần auth)
  * 3. contentCFInstance - Cho API không cần auth
@@ -41,7 +41,7 @@ authInstance.interceptors.request.use(
 
 authInstance.interceptors.response.use(
   (response) => {
-    // Trả về data trực tiếp như BC88BET
+    // Trả về data trực tiếp như 789bet
     return response.data;
   },
   (error: AxiosError) => {
@@ -83,7 +83,7 @@ contentInstance.interceptors.request.use(
 
 contentInstance.interceptors.response.use(
   (response) => {
-    // Trả về data trực tiếp như BC88BET
+    // Trả về data trực tiếp như 789BET
     const data = response.data;
     
     // Xử lý response format của 789BET
