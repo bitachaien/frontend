@@ -16,7 +16,7 @@ import { openNotification } from "@/utils/check";
 
 // Base URLs
 const AUTH_API_URL =
-  process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.78968.site";
+  process.env.NEXT_PUBLIC_AUTH_API_URL || "https://cms.78968.site";
 const CONTENT_API_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.78968.site";
 
