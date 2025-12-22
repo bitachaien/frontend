@@ -166,7 +166,7 @@ export default function Footer() {
               </div>
               <figure>
                 <Image
-                  src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/footer/c1fa14cc90b7f41191941bec1091f770.png"
+                  src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
                   width={120}
                   height={150}
                   alt=""
@@ -446,6 +446,18 @@ export default function Footer() {
             height={150}
             className="max-h-full max-w-full"
             src="https://media.cskh14.com/public/789bet/site-checklink/7667a74d-b293-4f4b-a880-6e44d6ebeb2a.gif"
+            unoptimized
+          />
+        </Link>
+      </div>
+            <div className="fixed top-[57%] left-0 z-10 translate-y-1/2 md:block hidden">
+        <Link href={linkPromotion}>
+          <Image
+            alt=""
+            width={150}
+            height={150}
+            className="max-h-full max-w-full"
+            src="https://media.cskh14.com/public/789bet/site-chuyendoi/1053d274-4085-41be-9f37-0e7940e5a1af.gif"
             unoptimized
           />
         </Link>
