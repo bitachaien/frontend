@@ -23,7 +23,7 @@ import menuItems from "./menuItems";
  */
 const extractSupplierFromLink = (link: string): string | null => {
   if (!link) return null;
-  
+
   // Extract game name from link patterns like /games/SlotCasino/pg
   const match = link.match(/\/([^/]+)$/);
   if (match) {
@@ -119,7 +119,7 @@ const Navbar = () => {
                     key={index}
                     className={`grid ${countItemInline} pt-[28px] pb-[12px] relative`}>
                     {subItemGroup.items.map((item, itemIndex) => {
-                       const handleClickGame = async () => {
+                      const handleClickGame = async () => {
                         // BC88BET style: Ưu tiên sử dụng playGame nếu có codeGame và gameId (vào thẳng game)
                         // codeGame: mã game cụ thể (ví dụ: "SB0001", "PG0123")
                         // gameId: mã nhà cung cấp (ví dụ: "SB", "PG")
@@ -227,8 +227,8 @@ const Navbar = () => {
         <div className={`w-[170px] relative z-10 manNav`}>
           <Image
             className="absolute bottom-0"
-            src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/logo-header.png"
-            alt="logo-cau-thu"
+            src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/menu/menu_logo.png"
+            alt="logo-daisu"
             width={132}
             height={145}
           />

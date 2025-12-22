@@ -16,35 +16,35 @@ export const dataTagPromotion: Props = [
     items: [
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/aa3520c80dc1466fbf0355c212429ec7.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/e3f53469e7de4d1894776dc04b701d46.jpg",
         PromotionId: 398,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/faa1ec5b26414bbd8a1e43cb628f2f6d.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/9cc8f234e1ca410abdc457785c9d09b9.jpg",
         PromotionId: 532,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/cc47a6364c9c4a38a5e14e124c0bd644.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/bfb19a9dbbc942108279ea0933bd62f2.jpg",
         PromotionId: 199,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/f6e2daa978414152869197c18aef148d.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/b9ecee2d5eda4b1d9092cb3a63f13efd.jpg",
         PromotionId: 537,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/85b28aa17875442b9a8ded4f6a43f32b.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/8867250f08414956845b697b9607144e.jpg",
         PromotionId: 516,
         RedirectUrl: null,
         link: "baNgayThuongLon",
@@ -120,7 +120,7 @@ export const dataTagPromotion: Props = [
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/4d3aa8e027c5498dbe57da2c34445e48.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/8867250f08414956845b697b9607144e.jpg",
         PromotionId: 111,
         RedirectUrl: null,
         link: "baNgayThuongLon",
@@ -140,28 +140,28 @@ export const dataTagPromotion: Props = [
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/67fa3c1a78e54948b3f6d84734c192ea.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/9cc8f234e1ca410abdc457785c9d09b9.jpg",
         PromotionId: 374,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/5d850274453f450eb6f20a295893bbfa.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/bfb19a9dbbc942108279ea0933bd62f2.jpg",
         PromotionId: 67,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
       {
         PromotionBanner:
-          "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/44f7c58362f241ec94fbf6eccec6cdca.png",
+          "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/b9ecee2d5eda4b1d9092cb3a63f13efd.jpg",
         PromotionId: 415,
         RedirectUrl: null,
         link: "baNgayThuongLon",
       },
  
       {
-        PromotionBanner: "https://gwfd.qatgwawm.net/system-assets/Web.Portal/Image/Upload/Promotion/44f7c58362f241ec94fbf6eccec6cdca.png",
+        PromotionBanner: "https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/08ab7dbbd46945788c6d9dcb24f268bd.jpg",
         PromotionId: 147,
         RedirectUrl: null,
         link: "baNgayThuongLon",

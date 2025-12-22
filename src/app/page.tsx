@@ -32,11 +32,12 @@ import { useWindowSize } from 'react-use';
 import { getImageQuality } from '@/utils';
 
 const dataImgSlide = [
-  'https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/banner/a.jpg',
-  'https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/banner/b.jpg',
-  'https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/banner/c.jpg',
-  'https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/banner/d.jpg',
-  'https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/banner/e.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/08ab7dbbd46945788c6d9dcb24f268bd.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/9cc8f234e1ca410abdc457785c9d09b9.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/b9ecee2d5eda4b1d9092cb3a63f13efd.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/bfb19a9dbbc942108279ea0933bd62f2.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/d91008e137e2471bb72d8eb0951b1258.jpg',
+  'https://q7sm4r.katawee.net/system-assets/PortalManagement/Image/SlideShow/e3f53469e7de4d1894776dc04b701d46.jpg',
 ];
 
 export default function Home() {

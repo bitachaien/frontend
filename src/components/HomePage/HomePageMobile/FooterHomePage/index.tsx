@@ -259,7 +259,7 @@ export default function FooterHomePage() {
             <section className={styles["social"]}>
               <i />
               <i />
-              <Link href="https://t.me/CSKH789BET_robot">
+              <Link href="https://t.me/cskh789betkhuyenmai_bot">
                 <Image
                   src="/images/footer/icon09.d190b117a0c9c2dc.png"
                   width={32}
@@ -267,7 +267,7 @@ export default function FooterHomePage() {
                   alt=""
                 />
               </Link>
-              <Link href="https://t.me/CSKH789BET_robot">
+              <Link href="https://t.me/cskh789betkhuyenmai_bot">
                 <Image
                   src="/images/footer/icon10.893bca8836a99907.png"
                   width={32}

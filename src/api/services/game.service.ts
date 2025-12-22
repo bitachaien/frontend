@@ -5,21 +5,21 @@ import { SignInReq } from "../types/auth.interface";
 import { ConfigGameEndPoint, ConfigAuthEndPoint } from "./contants";
 
 /**
- * Lấy danh sách game available - Giống BC88BET
+ * Lấy danh sách game available - Giống 789BET
  */
 const getListGameAvalible = () => {
   return contentInstance.get(`/api/game/gameAvalible`);
 };
 
 /**
- * Lấy danh sách game bắn cá - Giống BC88BET
+ * Lấy danh sách game bắn cá - Giống 789BET
  */
 const getListGameFish = () => {
   return contentInstance.get(`/api/product/fish`);
 };
 
 /**
- * Lấy danh sách game theo productType và gameType - Giống BC88BET
+ * Lấy danh sách game theo productType và gameType - Giống 789BET
  * @param productType - Loại sản phẩm (VD: "FC", "PG", "JL", etc.)
  * @param gameType - Loại game (VD: "RNG", "LIVE", "SPORT", etc.)
  */
@@ -28,7 +28,7 @@ const getListGame = (productType: string, gameType: string) => {
 };
 
 /**
- * Lấy danh sách game hot - Giống BC88BET
+ * Lấy danh sách game hot - Giống 789BET
  */
 const getGameHot = () => {
   return contentInstance.get(`/api/product/hot-games`);
@@ -127,7 +127,7 @@ const lauchgameType2 = async ({
 };
 
 /**
- * BC88BET style: Launch game by code and id
+ * 789BET style: Launch game by code and id
  * @param code - Game code (codeGame, tcgGameCode, productCode)
  * @param id - Game ID (gameId, productCode, game_code)
  * @note method=lg is required according to API documentation
@@ -224,12 +224,12 @@ export default {
   AddGameFavorite,
   ListGameFavorite,
   DeleteGameFavorite,
-  // BC88BET style APIs
+  // 789BET style APIs
   getListGameAvalible,
   getListGameFish,
   getListGame,
   getGameHot,
-  getPlayGameById, // BC88BET style: launch game by code and id
+  getPlayGameById, // 789BET style: launch game by code and id
 };
 
 // Export named để dễ import

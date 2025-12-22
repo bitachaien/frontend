@@ -15,12 +15,29 @@ const signin = (username: string, password: string) => {
 };
 
 // Đăng ký - BC88BET style (không có captcha, gate, referral, withdrawPassword)
+interface SignupCaptchaOptions {
+  captchaKey?: string;
+  captchaText?: string;
+}
+
+const buildCaptchaPayload = (options?: SignupCaptchaOptions) => {
+  if (options?.captchaKey && options?.captchaText) {
+    return {
+      captchaKey: options.captchaKey,
+      captchaText: options.captchaText,
+    };
+  }
+
+  return {};
+};
+
 const signupUser = (
   name: string,
   username: string,
   password: string,
   email: string,
-  phone: string
+  phone: string,
+  options?: SignupCaptchaOptions
 ) => {
   return authInstance.post("/auth/register", {
     name,
@@ -28,6 +45,7 @@ const signupUser = (
     phone,
     email,
     password,
+    ...buildCaptchaPayload(options),
   });
 };
 
@@ -38,7 +56,8 @@ const signupUserRe = (
   password: string,
   email: string,
   phone: string,
-  refcode: string | null
+  refcode: string | null,
+  options?: SignupCaptchaOptions
 ) => {
   return authInstance.post("/auth/register", {
     name,
@@ -47,6 +66,7 @@ const signupUserRe = (
     email,
     password,
     refcode,
+    ...buildCaptchaPayload(options),
   });
 };
 
@@ -112,12 +132,12 @@ export const getBalance = async () => {
     }
 
     const res: any = await contentInstance.get(ConfigAuthEndPoint.ME);
-    
+
     // BC88BET response format: { code: 200, user: {...} } hoặc { user: {...} }
     if (res?.code === 200 && res?.user) {
       return res.user.balance || res.user.coin || 0;
     }
-    
+
     // Fallback: nếu không có code, thử lấy user trực tiếp
     const userData = res?.user || res?.data?.user || res;
     return userData?.balance || userData?.coin || 0;

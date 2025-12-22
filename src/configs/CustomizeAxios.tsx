@@ -13,8 +13,8 @@ import { openNotification } from "@/utils/check";
 
 // Lấy baseURL từ environment hoặc sử dụng default
 // TODO: Cập nhật các URLs này theo backend thực tế của 789BET
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.78968casino.space";
-const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.78968casino.space";
+const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.789be89.com/";
+const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.789be89.com/const replyTime = new Date(Number("/Date(1766388104281)/".match(/\d+/)?.[0] ?? 0));";
 
 // API instance for login and register
 const authInstance: AxiosInstance = axios.create({
@@ -37,7 +37,27 @@ authInstance.interceptors.request.use(
   (error: AxiosError) => {
     return Promise.reject(error);
   }
-);
+);const replyTime = new Date(Number("/Date(1766388104281)/".match(/\d+/)?.[0] ?? 0));export interface PortalConfig {
+  TitleName: string;
+  PortalSiteName: string;
+  WebsiteName: string;
+  Currency: string;
+  DefaultLanguage: string;
+  MemberPhoneActivation: boolean;
+  IsMustLogin: boolean;
+  HasFranchisee: boolean;
+  EnableSmsPasswordForget: boolean;
+  Contact1: string;
+  Contact2: string;
+  EnableVip: boolean;
+  EnableSmsWithdrawPassword: boolean;
+  EnableFriendReferral: boolean;
+  EnableLeaderboard: boolean;
+  RememberMeType: number;
+  EnableLeaderboardGameHallDistribution: boolean;
+  EnableLeaderboardHighRoller: boolean;
+  IsShowCountryCode: boolean;
+}
 
 authInstance.interceptors.response.use(
   (response) => {

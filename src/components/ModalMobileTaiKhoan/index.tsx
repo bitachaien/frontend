@@ -19,6 +19,7 @@ import {
   faTrophy,
   faUsd,
   faUserShield,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -96,6 +97,16 @@ const taiKhoanButtonItems = [
       />
     ),
     href: "/account/vip",
+  },
+  {
+    id: 12,
+    title: "Mời bạn bè",
+    icon: (
+      <div className="rounded-full w-[38px] h-[34px] bg-[#ff9800] flex justify-center items-center">
+        <FontAwesomeIcon icon={faUserPlus} className="text-[22px] text-white" />
+      </div>
+    ),
+    href: "/FriendReferral",
   },
 ];
 

@@ -389,6 +389,14 @@ export default function Header() {
               Lịch Sử Đặt Cược
             </Link>
             <Link
+              className={` px-[5px] text-[15px] leading-[18px] text-[#c8c8c8] border-r border-solid border-[#c8c8c8] ${pathname.startsWith("/FriendReferral") || pathname.startsWith("/account/friendreferral")
+                  ? "!text-[#fd8f00]"
+                  : "#c8c8c8"
+                } hover:text-[#fd8f00]`}
+              href="/FriendReferral">
+              Giới thiệu bạn bè
+            </Link>
+            <Link
               className={` px-[5px] text-[15px] leading-[18px] text-[#c8c8c8] ${pathname.startsWith("/vip-details") ? "!text-[#fd8f00]" : "#c8c8c8"} hover:text-[#fd8f00]`}
               href="/account/vip">
               Chế Độ VIP

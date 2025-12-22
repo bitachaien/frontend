@@ -223,7 +223,7 @@ export default function Footer() {
             <i></i> <i></i>
             <Link
               className={styles["tg"]}
-              href={"https://t.me/CSKH789BET_robot"}
+              href={"https://t.me/cskh789betkhuyenmai_bot"}
             ></Link>
             <Link className={styles["fb"]} href="/"></Link>
             <Link className={styles["yt"]} href="/"></Link>
@@ -329,7 +329,7 @@ export default function Footer() {
               className={`${styles.subLink} ${!showCSKH ? styles.hide : styles.subOpen}`}
             >
               <li>
-                <Link href={"https://t.me/CSKH789BET_robot"}>
+                <Link href={"https://t.me/cskh789betkhuyenmai_bot"}>
                   <Image
                     className="w-[66px] h-[66px]"
                     src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/gopy.png"
@@ -342,7 +342,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={"https://t.me/CSKH789BET_robot"}>
+                <Link href={"https://t.me/cskh789betkhuyenmai_bot"}>
                   <Image
                     className="w-[66px] h-[66px]"
                     src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/daili.png"
@@ -355,7 +355,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={"https://t.me/CSKH789BET_robot"}>
+                <Link href={"https://t.me/cskh789betkhuyenmai_bot"}>
                   <Image
                     className="w-[66px] h-[66px]"
                     src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/tintuc.png"
@@ -368,7 +368,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={"https://t.me/CSKH789BET_robot"}>
+                <Link href={"https://t.me/cskh789betkhuyenmai_bot"}>
                   <Image
                     className="w-[66px] h-[66px]"
                     src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/hotro.png"
@@ -381,7 +381,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={"https://t.me/CSKH789BET_robot"}>
+                <Link href={"https://t.me/cskh789betkhuyenmai_bot"}>
                   <Image
                     className="w-[66px] h-[66px]"
                     src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/phone.png"
@@ -445,7 +445,7 @@ export default function Footer() {
             width={150}
             height={150}
             className="max-h-full max-w-full"
-            src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/promotion/lixi.gif"
+            src="https://media.cskh14.com/public/789bet/site-checklink/7667a74d-b293-4f4b-a880-6e44d6ebeb2a.gif"
             unoptimized
           />
         </Link>

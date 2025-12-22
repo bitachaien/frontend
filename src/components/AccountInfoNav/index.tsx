@@ -33,7 +33,7 @@ export default function AccountInfoNav() {
   const { dataBalance, refetch, isFetching } = useGeBalance()
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  
+
   // Ưu tiên sử dụng balance từ context (đã được cache), fallback về dataBalance nếu chưa có
   const displayBalance = balance || dataBalance || 0;
 
@@ -131,7 +131,29 @@ export default function AccountInfoNav() {
             Cài đặt bảo mật
           </span>
         </div>
-
+        <div
+          onClick={() => router.push("/account/friendreferral")}
+          className={
+            currentPathname === "/account/friendreferral"
+              ? "w-full h-[56px] bg-[#ff9800] text-white flex items-center pl-8 gap-2 cursor-pointer"
+              : "w-full h-[56px] bg-[#ffffff85] text-white flex items-center pl-8 gap-2 hover:bg-[#ff9800] cursor-pointer"
+          }>
+          <Image
+            className="h-6 w-6"
+            src="/svgs/FriendReferral_Referral.svg"
+            alt="Friend referral"
+            width={24}
+            height={24}
+            unoptimized
+          />
+          <span
+            className="text-base leading-[56px] font-medium"
+            style={{
+              letterSpacing: "3px",
+            }}>
+            Giới thiệu bạn bè
+          </span>
+        </div>
         <div
           onClick={() => router.push("/account/vip")}
           className={

@@ -16,6 +16,7 @@ import {
   faKey,
   faLocationArrow,
   faRobot,
+  faUsers,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -276,6 +277,19 @@ const NavBarMobile = ({ isOpen, setIsOpen }: Props) => {
       icon: (
         <FontAwesomeIcon
           icon={faHandshake}
+          className="text-xl"
+          style={{
+            color: "#f87d02",
+          }}
+        />
+      ),
+    },
+    {
+      href: "/FriendReferral",
+      label: "Giới thiệu bạn bè",
+      icon: (
+        <FontAwesomeIcon
+          icon={faUsers}
           className="text-xl"
           style={{
             color: "#f87d02",

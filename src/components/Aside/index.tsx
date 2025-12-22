@@ -25,32 +25,32 @@ export default function Aside() {
             <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/247.png" alt="" />
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/cskh.png" alt="" />
             </Link>
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/fb.png" alt="" />
             </Link>
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/hotline.png" alt="" />
             </Link>
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/daily.png" alt="" />
             </Link>
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/khieunai.png" alt="" />
             </Link>
           </div>
           <div className={styles["cskh"]}>
-            <Link href="https://t.me/CSKH789BET_robot">
+            <Link href="https://t.me/cskh789betkhuyenmai_bot">
               <img src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/aside/tintuc.png" alt="" />
             </Link>
           </div>

@@ -1,0 +1,7 @@
+{
+    "npm.scriptExplorerExclude": [
+        "nvm install"
+    ],
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "git.ignoreLimitWarning": true
+}

@@ -35,6 +35,17 @@ const nextConfig = {
         hostname: "gwfd.qatgwawm.net",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "789be89.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "q7sm4r.katawee.net",
+        pathname: "**",
+      },
+
     ],
   },
 
@@ -44,7 +55,16 @@ const nextConfig = {
         source: "/api/:path*",
         destination: "https://betapi.spaceplus.live/api/:path*",
       },
+      {
+        source: "/api/:path*",
+        destination: "https://789be89.com/api/:path*",
+      },
+      {
+        source: "/api/:path*",
+        destination: "https://api.6688b.online/api/:path*",
+      },
     ];
+
   },
 
   productionBrowserSourceMaps: false,

@@ -33,6 +33,11 @@ export const ConfigMailBoxEndPoint = {
   MY_MAIL: "/mail-boxes",
 };
 
+export const ConfigFriendReferralEndPoint = {
+  DETAIL: "/api/1.0/friendReferral/detail",
+  PROMOTION: "/api/1.0/friendReferral/promotion",
+};
+
 export const ConfigTransactionHistoryEndPoint = {
   LIST_TRANSACTION: "/transaction/histories",
 };
