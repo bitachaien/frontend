@@ -76,20 +76,29 @@ export default function ModalLoginV1({
     setLoadingLogin(true);
     try {
       // BC88BET style: chỉ cần username, password, captcha cố định
-      const response = await authService.signin(
+      const response: any = await authService.signin(
         values.username.trim(),
         values.password.trim()
       );
 
       // BC88BET response format: { status: true, access_token, user } hoặc { status: false, msg }
-      if (response?.status === true) {
-        const { access_token, user } = response;
+      if (response?.data?.status === true || response?.status === true) {
+        const responseData = response?.data || response;
+        const { access_token, user } = responseData;
         setTokenToLocalStorage(access_token);
-        loginUser(user || response, access_token);
+        loginUser(user || responseData, access_token);
+
+        // Hiển thị thông báo đăng nhập thành công
+        openNotification({
+          type: "success",
+          message: "Đăng nhập thành công! Chào mừng bạn quay trở lại.",
+        });
+
         setIsOpen(false);
         form.resetFields();
       } else {
-        setTextModalError(response?.msg || "Đăng nhập thất bại");
+        const responseData = response?.data || response;
+        setTextModalError(responseData?.msg || "Đăng nhập thất bại");
         setOpenModalError(true);
       }
     } catch (error: any) {

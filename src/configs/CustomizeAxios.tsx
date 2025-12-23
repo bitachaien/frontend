@@ -12,9 +12,8 @@ import { message as Message } from "antd";
 import { openNotification } from "@/utils/check";
 
 // Lấy baseURL từ environment hoặc sử dụng default
-// TODO: Cập nhật các URLs này theo backend thực tế của 789BET
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "https://www.789be89.com/";
-const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.789be89.com/const replyTime = new Date(Number("/Date(1766388104281)/".match(/\d+/)?.[0] ?? 0));";
+const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || "http://103.82.195.215:8009/api/auth/";
+const CONTENT_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://103.82.195.215:8009/api/";
 
 // API instance for login and register
 const authInstance: AxiosInstance = axios.create({
@@ -37,7 +36,9 @@ authInstance.interceptors.request.use(
   (error: AxiosError) => {
     return Promise.reject(error);
   }
-);const replyTime = new Date(Number("/Date(1766388104281)/".match(/\d+/)?.[0] ?? 0));export interface PortalConfig {
+);
+
+export interface PortalConfig {
   TitleName: string;
   PortalSiteName: string;
   WebsiteName: string;
@@ -105,7 +106,7 @@ contentInstance.interceptors.response.use(
   (response) => {
     // Trả về data trực tiếp như 789BET
     const data = response.data;
-    
+
     // Xử lý response format của 789BET
     if (data?.status === false && data?.msg) {
       openNotification({
@@ -113,7 +114,7 @@ contentInstance.interceptors.response.use(
         message: data.msg,
       });
     }
-    
+
     return data;
   },
   (error: AxiosError) => {
