@@ -160,7 +160,7 @@ export default function Footer() {
                   alt=""
                 />
                 <p>
-                  Luis Suarez
+                  Ronnie O'Sullivan
                   <br /> Năm 2022 - 2023
                 </p>
               </div>

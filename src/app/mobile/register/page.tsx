@@ -119,10 +119,10 @@ export default function MobileRegister() {
 
     setLoadingGame(true);
     setLoadingRegister(true);
-    
+
     try {
       let response: any;
-      
+
       // Nếu có refcode, dùng signupUserRe, ngược lại dùng signupUser
       if (refcodeValue) {
         response = await authService.signupUserRe(
@@ -237,7 +237,7 @@ export default function MobileRegister() {
         <div className=" text-white text-center flex items-center h-[110px] px-4 pb-4">
           <div className="flex flex-col items-center">
             <Image
-              src="/images/login/suarez.png"
+              src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
               alt=""
               width={120}
               height={190}
@@ -250,7 +250,7 @@ export default function MobileRegister() {
             <div className="pt-1 flex gap-4">
               <div className="text-left">
                 <h2 className="text-[26px] leading-[24px] text-[#f37124] ">
-                  Luis Suarez
+                  Ronnie O'Sullivan
                 </h2>
                 <p className="text-white text-lg opacity-97 font-light">
                   Năm 2022 - 2023
@@ -270,7 +270,7 @@ export default function MobileRegister() {
 
           {/* Chữ ký */}
           {/* <div className='mt-6'>
-            <p className='italic text-white text-lg'>Luis Suarez</p>
+            <p className='italic text-white text-lg'>Ronnie O'Sullivan</p>
           </div> */}
         </div>
 
@@ -280,7 +280,7 @@ export default function MobileRegister() {
             <div className='flex flex-col text-[#fff] relative'>
               <h2 className='text-base font-bold'>Đại Sứ Thương Hiệu</h2>
               <p className='text-[15px] font-normal leading-4'>
-                Luis Suarez (2022 - 2023)
+                Ronnie O'Sullivan (2022 - 2023)
               </p>
             </div>
             <img

@@ -98,7 +98,7 @@ export default function FooterHomePage() {
             <section className={styles["sign"]}>
               <div>
                 <h2>Đại Sứ Thương Hiệu</h2>
-                <p>Luis Suarez</p>
+                <p>Ronnie O'Sullivan</p>
                 <p>Năm 2022 - 2023</p>
               </div>
               <div>
@@ -215,7 +215,7 @@ export default function FooterHomePage() {
             <section className={styles["sign"]}>
               <div>
                 <h2>Đại Sứ Thương Hiệu</h2>
-                <p>Luis Suarez</p>
+                <p>Ronnie O'Sullivan</p>
                 <p>Năm 2022 - 2023</p>
               </div>
               <div>

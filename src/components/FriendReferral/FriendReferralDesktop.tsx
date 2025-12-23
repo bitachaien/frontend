@@ -174,7 +174,7 @@ const FriendReferralDesktop = () => {
                 <div className="flex flex-wrap items-center gap-4">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 p-2">
                         <Image
-                            src="/svgs/FriendReferral_Referral.svg"
+                            src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/home/btn-up.svg"
                             alt="Friend referral"
                             width={40}
                             height={40}

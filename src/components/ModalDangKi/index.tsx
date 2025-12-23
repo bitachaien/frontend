@@ -116,7 +116,7 @@ export default function ModalDangKi({
 
     try {
       let response: any;
-      
+
       // Nếu có refcode, dùng signupUserRe, ngược lại dùng signupUser
       if (refcodeValue) {
         response = await authService.signupUserRe(
@@ -225,7 +225,7 @@ export default function ModalDangKi({
                       Đại Sứ Thương Hiệu
                     </h2>
                     <p className="text-[17px] font-normal leading-4">
-                      Luis Suarez (2022 - 2023)
+                      Ronnie O'Sullivan (2022 - 2023)
                     </p>
                   </div>
                   <Image

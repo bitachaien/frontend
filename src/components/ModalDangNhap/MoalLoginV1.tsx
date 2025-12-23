@@ -214,7 +214,7 @@ export default function ModalLoginV1({
                   </p>
                   <p className="font-helvetica text-lg">
                     <span className="text-[#fc8f00] text-[22px] font-semibold">
-                      Luis Suarez{" "}
+                      Ronnie O'Sullivan{" "}
                     </span>
                     (Năm 2022 - 2023)
                   </p>

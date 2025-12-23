@@ -122,7 +122,7 @@ export default function ModalRegisterV1({
     setLoadingRegister(true);
     try {
       let response: any;
-      
+
       // Nếu có refcode, dùng signupUserRe, ngược lại dùng signupUser
       if (refcodeValue) {
         response = await authService.signupUserRe(
@@ -262,7 +262,7 @@ export default function ModalRegisterV1({
                   <div>
                     <p>Đại Sứ Thương Hiệu</p>{" "}
                     <p>
-                      <span>Luis Suarez </span>(Năm 2022 - 2023)
+                      <span>Ronnie O'Sullivan </span>(Năm 2022 - 2023)
                     </p>
                   </div>
                   <Image

@@ -31,7 +31,7 @@ export default function BrandAmbassador() {
             alt=""
           />
           <h4>
-            789BET - Luis Suarez:
+            789BET - Ronnie O'Sullivan:
             <span style={{ fontWeight: 400 }}>
               Người Bạn Đồng Hành Cùng 789BET
             </span>
@@ -49,14 +49,14 @@ export default function BrandAmbassador() {
             cho làng túc cầu với những mục tiêu cộng đồng ý nghĩa.
           </p>
           <h4>
-            Luis Suarez -
+            Ronnie O'Sullivan -
             <span style={{ fontWeight: 400 }}>
               Huyền thoại làng túc cầu thế giới
             </span>
           </h4>
           <p>
             Là người hâm mộ trái bóng tròn chắc chắn bạn sẽ biết đến huyền thoại
-            làng túc cầu Luis Suarez. Một trong ba nhân tố chính của bộ ba
+            làng túc cầu Ronnie O'Sullivan. Một trong ba nhân tố chính của bộ ba
             nguyên tử Barcelona (Suarez - Messi - Neymar) đã tạo nên “cú ăn ba”
             huyền thoại, làm cả Châu Âu khiếp sợ lúc bấy giờ.
           </p>
@@ -88,13 +88,13 @@ export default function BrandAmbassador() {
             World Cup 2018 là một minh chứng cho điều đó.
           </p>
           <h4>
-            789BET và Luis Suarez:
+            789BET và Ronnie O'Sullivan:
             <span style={{ fontWeight: 400 }}>
               Màn hợp tác nâng tầm giá trị
             </span>
           </h4>
           <p>
-            Không chỉ trên sân cỏ, Luis Suarez với “đời tư sạch” và những đóng
+            Không chỉ trên sân cỏ, Ronnie O'Sullivan với “đời tư sạch” và những đóng
             góp tích cực cho cộng đồng qua các hoạt động thiện nguyện những điều
             đó đã ghi điểm tuyệt đối với thương hiệu
             <span className="_1JQaRFbBQngYQ_OEgAkl5U">789BET</span> và trong
@@ -103,10 +103,10 @@ export default function BrandAmbassador() {
         </div>
         <div>
           <p>
-            Đó chính là lý do mà 789BET và Luis Suarez tìm được “tiếng nói
+            Đó chính là lý do mà 789BET và Ronnie O'Sullivan tìm được “tiếng nói
             chung” trong mục tiêu nâng tầm ảnh hưởng của bóng đá đến các hoạt
             động xã hội. Vừa qua, buổi lễ ký kết trở thành đại sứ thương hiệu
-            của 789BET của Luis Suarez đã diễn ra long trọng ngay trước thềm
+            của 789BET của Ronnie O'Sullivan đã diễn ra long trọng ngay trước thềm
             World Cup 2022..
           </p>
           <Image
@@ -117,7 +117,7 @@ export default function BrandAmbassador() {
             alt=""
           />
           <p style={{ margin: 0 }}>
-            Chia sẻ với truyền thông Luis Suarez phấn khởi: “Tôi rất vinh dự khi
+            Chia sẻ với truyền thông Ronnie O'Sullivan phấn khởi: “Tôi rất vinh dự khi
             trở thành đại sứ thương hiệu cho
             <span className="_1JQaRFbBQngYQ_OEgAkl5U">789BET</span>. Chúng tôi
             tìm thấy ở nhau những điểm chung trong hoạt động vì cộng đồng.
@@ -126,7 +126,7 @@ export default function BrandAmbassador() {
             ủ của tôi với bóng đá thành hiện thực”
           </p>
           <h4>
-            789BET và Luis Suarez:
+            789BET và Ronnie O'Sullivan:
             <span style={{ fontWeight: 400 }}>
               Chung tay vì cộng đồng bóng đá
             </span>
@@ -154,7 +154,7 @@ export default function BrandAmbassador() {
             </li>
           </ul>
           <p>
-            <strong>Luis Suarez</strong> và
+            <strong>Ronnie O'Sullivan</strong> và
             <span className="_1JQaRFbBQngYQ_OEgAkl5U">789BET</span> hợp tác với
             nhau không những cùng nhau phát triển mà còn mở ra một tương lai với
             những điều tích cực hơn cho cộng đồng bóng đá. Cả hai sẽ còn thực

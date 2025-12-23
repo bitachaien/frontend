@@ -166,7 +166,7 @@ export default function ModalDangNhap({
                   Đại Sứ Thương Hiệu
                 </p>
                 <p className="text-[15x] font-normal leading-3 font-inherits">
-                  Luis Suarez (2022 - 2023)
+                  Ronnie O'Sullivan (2022 - 2023)
                 </p>
               </div>
               <div className="pb-4">
