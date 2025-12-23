@@ -269,7 +269,7 @@ export default function MobileLogin() {
         <div className="text-white text-center flex items-center h-[110px] px-4 justify-center">
           <div className="flex flex-col items-center">
             <Image
-              src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
+              src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/menu/menu_logo.png"
               alt=""
               width={120}
               height={190}

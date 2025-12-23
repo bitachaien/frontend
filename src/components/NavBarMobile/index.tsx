@@ -410,7 +410,7 @@ const NavBarMobile = ({ isOpen, setIsOpen }: Props) => {
         </div>
         <Image
           className="min-h-[214px] w-full ml-[5px]"
-          src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
+          src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/menu/menu_logo.png"
           width={548}
           height={214}
           alt=""
