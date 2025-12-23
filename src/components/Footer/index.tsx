@@ -166,7 +166,7 @@ export default function Footer() {
               </div>
               <figure>
                 <Image
-                  src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/menu/menu_logo.png"
+                  src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
                   width={120}
                   height={150}
                   alt=""

@@ -253,7 +253,7 @@ export default function ModalRegisterV1({
             <div className="flex w-full">
               <div className="pt-24 relative h-fit w-[55.5%] flex justify-center">
                 <Image
-                  src="/images/login/suarezGroup.png"
+                  src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/9ca94e26c9a520b02b726cdbd2a20dca.png"
                   alt=""
                   width={497}
                   height={532}

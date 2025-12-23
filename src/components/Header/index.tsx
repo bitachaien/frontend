@@ -37,7 +37,7 @@ import ModalTrail from "../ModalTrail";
 import Marquee from "react-fast-marquee";
 import { subText } from "@/utils/check";
 import NewNotificationModal from "../NewNotificationModal";
-import { useEffectOnce, useWindowSize } from "react-use";
+import { useEffectOnce } from "react-use";
 import dayjs from "dayjs";
 import ModalNotification from "../ModalNotification";
 import ModalDesktopWelcome from "../ModalDesktopWelcome";
@@ -76,8 +76,6 @@ export default function Header() {
   const [openLang, setOpenLang] = useState(false);
   const [openModalNoti, setOpenModalNoti] = useState(false);
   const { dataBalance, refetch: refetchBalanceFromAPI, isFetching: fetchingBalance } = useGeBalance()
-
-  const { width } = useWindowSize();
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -390,8 +388,8 @@ export default function Header() {
             </Link>
             <Link
               className={` px-[5px] text-[15px] leading-[18px] text-[#c8c8c8] border-r border-solid border-[#c8c8c8] ${pathname.startsWith("/FriendReferral") || pathname.startsWith("/account/friendreferral")
-                  ? "!text-[#fd8f00]"
-                  : "#c8c8c8"
+                ? "!text-[#fd8f00]"
+                : "#c8c8c8"
                 } hover:text-[#fd8f00]`}
               href="/FriendReferral">
               Giới thiệu bạn bè
@@ -538,13 +536,19 @@ export default function Header() {
         <div className="fixed z-[100] h-14 w-full">
           <div
             className={`${styles.bgHeaderLg} w-full relative h-14 md:h-[94px] overflow-hidden`}>
-            {/* <Image
-              src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/home/video-header.gif"
-              width={468}
-              height={76}
-              alt=""
-              className="videoTag absolute z-[1] w-full h-14 object-cover"
-            /> */}
+            <video
+              className={styles.videoBackground}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true">
+              <source
+                src="https://media.cskh14.com/public/789bet/site-quatang/7cca106b-f2c2-480a-9c58-1444041d699c.mp4"
+                type="video/mp4"
+              />
+            </video>
 
             <div className="top w-full h-14 flex items-center justify-between text-gray-600 body-font pl-5 pr-5 absolute z-10">
               <div onClick={() => setShowNavBar(true)}>
@@ -577,7 +581,20 @@ export default function Header() {
       </div>
       <div
         className={`h-[94px] w-full hidden md:block z-10 pr-3 relative ${styles["bg-header-top"]}`}>
-        <div className="flex justify-between w-full items-center max-w-[1200px] mx-auto">
+        <video
+          className={styles.videoBackground}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true">
+          <source
+            src="https://media.cskh14.com/public/789bet/site-quatang/7cca106b-f2c2-480a-9c58-1444041d699c.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="flex justify-between w-full items-center max-w-[1200px] mx-auto relative z-10">
           <div className="flex gap-4 pl-[170px] h-full">
             <Link
               href="/"
@@ -597,22 +614,6 @@ export default function Header() {
             <EmtyUser />
           </div>
         </div>
-        {width > 768 && (
-          <div className="absolute w-full h-full top-0 left-0 z-[-1]">
-            {/* <video
-              autoPlay={true}
-              loop={true}
-              muted={true}
-              playsInline
-              className="h-full w-full object-cover">
-              <source
-                type="video/mp4"
-                className={styles.isMp4}
-                src="https://cskh14.com/789BET_Media/20241215211517.mp4"
-              />
-            </video> */}
-          </div>
-        )}
       </div>
 
       <div className="w-full bg-navbar flex items-center min-h-[44px] justify-center max-md:hidden bg-nav relative">

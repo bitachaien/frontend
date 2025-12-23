@@ -227,7 +227,7 @@ const Navbar = () => {
         <div className={`w-[170px] relative z-10 manNav`}>
           <Image
             className="absolute bottom-0"
-            src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/menu/menu_logo.png"
+            src="https://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/d81a805c208edc03fb71f31a444457cd.png"
             alt="logo-daisu"
             width={132}
             height={145}

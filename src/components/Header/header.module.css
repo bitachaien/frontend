@@ -1,9 +1,18 @@
-.bgHeaderLg {
-  background-image: url(https://media.cskh14.com/public/789bet/site-quatang/7cca106b-f2c2-480a-9c58-1444041d699c.mp4);
+.bgHeaderLg,
+.bg-header-top {
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
 }
 
-.bg-header-top {
-  background: url(https://media.cskh14.com/public/789bet/site-quatang/7cca106b-f2c2-480a-9c58-1444041d699c.mp4) repeat-x;
+.videoBackground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .btnLogin {

@@ -203,7 +203,7 @@ export default function ModalLoginV1({
             <div className="  flex gap-8">
               <div className="pt-24 relative ">
                 <Image
-                  src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/login/suarezGroup.png"
+                  src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bethttps://q7sm4r.katawee.net/system-requirement/Web.PortalNew/UK251-01/14418bad09/images/9ca94e26c9a520b02b726cdbd2a20dca.png"
                   alt=""
                   width={497}
                   height={532}
