@@ -801,8 +801,7 @@ export default function HomePageMobile() {
                 width={100}
                 height={100}
                 className="max-h-full max-w-full"
-                src="https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/promotion/cq9.gif"
-                // src='https://cdn.jsdelivr.net/gh/snail5555/akv@main/789bet/images/promotion/lixi.gif'
+                src="https://q7sm4r.katawee.net/system-assets/ActivityEntranceImage/Image/d98878dc-fd52-479d-8d39-8585f8052bde.gif"
                 unoptimized
               />
             </Link>

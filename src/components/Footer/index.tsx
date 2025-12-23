@@ -438,7 +438,7 @@ export default function Footer() {
 
 
       </div>
-      <div className="fixed top-[57%] left-0 z-10 translate-y-1/2 md:block hidden">
+      <div className="fixed top-[57%] left-4 z-10 translate-y-1/2 md:block hidden">
         <Link href={linkPromotion}>
           <Image
             alt=""
@@ -450,7 +450,7 @@ export default function Footer() {
           />
         </Link>
       </div>
-            <div className="fixed top-[57%] left-0 z-10 translate-y-1/2 md:block hidden">
+      <div className="fixed top-[57%] right-4 z-10 translate-y-1/2 md:block hidden">
         <Link href={linkPromotion}>
           <Image
             alt=""
