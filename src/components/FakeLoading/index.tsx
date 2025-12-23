@@ -80,7 +80,7 @@ export default function FakerLoading({ children }: any) {
             />
           </div>
           <Image
-            src="/images/fake-loading/splash-new.jpg"
+            src="https://q7sm4r.katawee.net/system-requirement/Web.MobileNew/UK251-01/14418bad09/assets/images/splash.jpg"
             alt="loading"
             height={1000}
             width={1000}
